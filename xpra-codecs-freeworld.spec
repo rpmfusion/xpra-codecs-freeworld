@@ -1,12 +1,11 @@
 # This package provides H.264 and swscale support for Xpra.
-# 
 
 # Remove private provides from .so files in the python_sitearch directory
 %global __provides_exclude_from ^%{python_sitearch}/.*\\.so$
 
 Name:           xpra-codecs-freeworld
-Version:        0.14.21
-Release:        2%{?dist}
+Version:        0.15.9
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
@@ -19,7 +18,6 @@ BuildRequires:  libXtst-devel
 BuildRequires:  libxkbfile-devel
 BuildRequires:  Cython
 BuildRequires:  desktop-file-utils
-BuildRequires:  libvpx-devel
 BuildRequires:  libwebp-devel
 BuildRequires:  x264-devel
 BuildRequires:  ffmpeg-devel
@@ -36,10 +34,8 @@ x264 and ffmpeg.
 
 %build
 CFLAGS="%{optflags}" %{__python} setup.py build \
-    --with-vpx \
-    --with-webp \
     --with-enc_x264 \
-    --with-dec_avcodec \
+    --with-dec_avcodec2 \
     --with-csc_swscale \
     --with-Xdummy \
     --with-Xdummy_wrapper
@@ -50,7 +46,7 @@ mkdir destdir
 
 mkdir -p %{buildroot}%{python_sitearch}/xpra/codecs/
 pushd destdir%{python_sitearch}/xpra/codecs/
-cp -pr csc_swscale dec_avcodec enc_x264 \
+cp -pr csc_swscale dec_avcodec2 enc_x264 \
         %{buildroot}%{python_sitearch}/xpra/codecs/
 popd
 
@@ -64,9 +60,32 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 
 %files
 %{python_sitearch}/xpra/codecs/*
-%doc COPYING
+%license COPYING
 
 %changelog
+* Wed Dec  2 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.9-1
+- Update to 0.15.9
+
+* Tue Nov 23 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.8-1
+- Update to 0.15.8
+
+* Thu Sep 17 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.6-1
+- Update to 0.15.6
+
+* Wed Sep  2 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.5-2
+- Remove --with-webp build option
+
+* Wed Sep  2 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.5-1
+- Update to 0.15.5
+
+* Wed Aug  5 2015 Jonathan G. Underwood <jonathan.underwood@gmail.com> - 0.15.4-2
+- Remove --with-vpx from setup options
+- Remove BuildRequires:  libvpx-devel
+- Use %%license tag for COPYING file
+
+* Wed Aug  5 2015 Jonathan G. Underwood <jonathan.underwood@gmail.com> - 0.15.4-1
+- Update to 0.15.4
+
 * Tue Mar 24 2015 Jonathan G. Underwood <jonathan.underwood@gmail.com> - 0.14.21-2
 - Remove vpx codec - that's now packaged with the main xpra package
 
