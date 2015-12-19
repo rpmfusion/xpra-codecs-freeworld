@@ -4,7 +4,7 @@
 %global __provides_exclude_from ^%{python_sitearch}/.*\\.so$
 
 Name:           xpra-codecs-freeworld
-Version:        0.15.9
+Version:        0.15.10
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -63,6 +63,9 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sat Dec 19 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.10-1
+- Update to 0.15.10
+
 * Wed Dec  2 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.9-1
 - Update to 0.15.9
 
