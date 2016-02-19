@@ -4,7 +4,7 @@
 %global __provides_exclude_from ^%{python_sitearch}/.*\\.so$
 
 Name:           xpra-codecs-freeworld
-Version:        0.15.10
+Version:        0.16.2
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -23,7 +23,7 @@ BuildRequires:  x264-devel
 BuildRequires:  ffmpeg-devel
 
 Requires:       xpra = %{version}
-Requires:       gstreamer-plugins-ugly
+Requires:       gstreamer1-plugins-ugly
 
 %description
 Provides support for H.264 encoding and swscale support in xpra using
@@ -46,7 +46,7 @@ mkdir destdir
 
 mkdir -p %{buildroot}%{python_sitearch}/xpra/codecs/
 pushd destdir%{python_sitearch}/xpra/codecs/
-cp -pr csc_swscale dec_avcodec2 enc_x264 \
+cp -pr csc_swscale dec_avcodec2 enc_x264 libav_common \
         %{buildroot}%{python_sitearch}/xpra/codecs/
 popd
 
@@ -63,6 +63,11 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Fri Feb 19 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.16.2-1
+- Update to 0.16.2
+- Change Requires from gstreamer-plugins-ugly to gstreamer1-plugins-ugly
+- Add codecs/libav_common
+
 * Sat Dec 19 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.10-1
 - Update to 0.15.10
 
