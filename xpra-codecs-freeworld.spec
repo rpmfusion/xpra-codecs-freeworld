@@ -4,7 +4,7 @@
 %global __provides_exclude_from ^%{python_sitearch}/.*\\.so$
 
 Name:           xpra-codecs-freeworld
-Version:        0.16.2
+Version:        0.16.3
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -63,6 +63,9 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sat Apr  2 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.16.3-1
+- Update to 0.16.3
+
 * Fri Feb 19 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.16.2-1
 - Update to 0.16.2
 - Change Requires from gstreamer-plugins-ugly to gstreamer1-plugins-ugly
