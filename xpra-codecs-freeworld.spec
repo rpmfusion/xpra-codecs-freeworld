@@ -77,7 +77,7 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 * Wed Dec  2 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.9-1
 - Update to 0.15.9
 
-* Tue Nov 23 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.8-1
+* Tue Nov 22 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.8-1
 - Update to 0.15.8
 
 * Thu Sep 17 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.6-1
