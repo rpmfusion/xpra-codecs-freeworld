@@ -1,12 +1,18 @@
 Name:           xpra-codecs-freeworld
 Version:        0.17.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
+# Fix build failure due to deprecated avcodec_decode_video2 in recent ffmpeg
+# See: https://www.xpra.org/trac/changeset/12944/xpra
+# And: https://xpra.org/trac/changeset/12943/xpra
+# 12943 doesn't apply cleanly, so for now we'll just use 12944
+# Can be dropped in 0.17.5
+Patch0:         xpra-0.17.x-12944.patch
 
 BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel
@@ -26,6 +32,7 @@ x264 and ffmpeg.
 
 %prep
 %setup -q -n xpra-%{version}
+%patch0 -p4
 
 %build
 CFLAGS="%{optflags}" %{__python} setup.py build \
@@ -58,6 +65,10 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Jul 31 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.17.4-2
+- Add xpra-0.17.x-12944.patch to fix build failure with latest ffmpeg
+- Fix bogus changelog date in spec file
+
 * Sun Jul 31 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.17.4-1
 - Update to 0.17.4
 
@@ -79,7 +90,7 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 * Wed Dec  2 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.9-1
 - Update to 0.15.9
 
-* Tue Nov 23 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.8-1
+* Tue Nov 24 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.8-1
 - Update to 0.15.8
 
 * Thu Sep 17 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.6-1
