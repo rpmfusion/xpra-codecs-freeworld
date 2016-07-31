@@ -1,10 +1,5 @@
-# This package provides H.264 and swscale support for Xpra.
-
-# Remove private provides from .so files in the python_sitearch directory
-%global __provides_exclude_from ^%{python_sitearch}/.*\\.so$
-
 Name:           xpra-codecs-freeworld
-Version:        0.16.3
+Version:        0.17.4
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -63,6 +58,13 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Jul 31 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.17.4-1
+- Update to 0.17.4
+
+* Sat Apr  2 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.16.3-2
+- Remove macro definition stripping provides from .so files in
+  the python_sitearch directory - no longer needed
+
 * Sat Apr  2 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.16.3-1
 - Update to 0.16.3
 
@@ -77,7 +79,7 @@ find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
 * Wed Dec  2 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.9-1
 - Update to 0.15.9
 
-* Tue Nov 22 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.8-1
+* Tue Nov 23 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.8-1
 - Update to 0.15.8
 
 * Thu Sep 17 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.15.6-1
