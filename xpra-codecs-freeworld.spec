@@ -1,59 +1,23 @@
-%bcond_without enc_x264
-%bcond_without dec_avcodec2
-%bcond_without csc_swscale
-%bcond_without webp
-
-# These are nececessary as the _with_foo is *not* defined if the
-# --with flag isn't specifed, and we need to have the --without
-# specified option in that case.
-%if %{without enc_x264}
-%define _with_enc_x264 --without-enc_x264
-%endif
-
-%if %{without dec_avcodec2}
-%define _with_dec_avcodec2 --without-dec_avcodec2
-%endif
-
-%if %{without csc_swscale}
-%define _with_csc_swscale --without-csc_swscale
-%endif
-
-%if %{with webp}
-%define _with_webp --with-webp
-%endif
-
 Name:           xpra-codecs-freeworld
-Version:        1.0.2
-Release:        1%{?dist}
+Version:        0.17.5
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
-## Set directory path of xvid's header file
-Patch0:         %{name}-xvid.patch
-
 BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel
-BuildRequires:  libxkbfile-devel, libvpx-devel
-BuildRequires:  xvidcore-devel, x265-devel
+BuildRequires:  libxkbfile-devel
 BuildRequires:  Cython
+BuildRequires:  desktop-file-utils
 BuildRequires:  libwebp-devel
-
-%if %{with webp}
-BuildRequires:  libwebp-devel
-%endif
-
-%if %{with enc_x264}
 BuildRequires:  x264-devel
-%endif
-%if %{with dec_avcodec2} || %{without csc_swscale}
 BuildRequires:  ffmpeg-devel
-%endif
 
-Requires:       xpra%{?isa} = %{version}
-Requires:       gstreamer1-plugins-ugly%{?isa}
+Requires:       xpra = %{version}
+Requires:       gstreamer1-plugins-ugly
 
 %description
 Provides support for H.264 encoding and swscale support in xpra using
@@ -61,63 +25,39 @@ x264 and ffmpeg.
 
 %prep
 %setup -q -n xpra-%{version}
-%patch0 -p0
+
 
 %build
-CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
- --with-enc_xvid \
- %{?_with_webp} \
- %{?_with_enc_x264} \
- %{?_with_dec_avcodec2} \
- %{?_with_csc_swscale} \
- --with-Xdummy \
- --with-Xdummy_wrapper \
- --without-html5 \
- --without-tests \
- --with-verbose
+CFLAGS="%{optflags}" %{__python} setup.py build \
+    --with-enc_x264 \
+    --with-dec_avcodec2 \
+    --with-csc_swscale \
+    --with-Xdummy \
+    --with-Xdummy_wrapper
 
 %install
-%{__python2} setup.py  install -O1 --skip-build --root destdir
+mkdir destdir
+%{__python} setup.py install --skip-build --root destdir
 
-## We are interested to additional codecs only
-mkdir -p %{buildroot}%{python2_sitearch}/xpra/codecs/
-pushd destdir%{python2_sitearch}/xpra/codecs/
-cp -pr \
-%if %{with csc_swscale}
- csc_swscale \
-%endif
-%if %{with dec_avcodec2}
- dec_avcodec2 \
-%endif
-%if %{with enc_x264}
- enc_x264 \
-%endif
-%if %{with webp}
- webp \
-%endif
- libav_common enc_ffmpeg enc_xvid enc_x265 %{buildroot}%{python2_sitearch}/xpra/codecs/
+mkdir -p %{buildroot}%{python_sitearch}/xpra/codecs/
+pushd destdir%{python_sitearch}/xpra/codecs/
+cp -pr csc_swscale dec_avcodec2 enc_x264 libav_common \
+        %{buildroot}%{python_sitearch}/xpra/codecs/
 popd
 
 #drop shebangs from python_sitearch
-find %{buildroot}%{python2_sitearch}/xpra -name '*.py' \
+find %{buildroot}%{python_sitearch}/xpra -name '*.py' \
     -exec sed -i '1{\@^#!/usr/bin/env python@d}' {} \;
     
 #fix permissions on shared objects
-find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
+find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
     -exec chmod 0755 {} \;
 
 %files
-%dir %{python2_sitearch}/xpra
-%dir %{python2_sitearch}/xpra/codecs
-%{python2_sitearch}/xpra/codecs/*
-%doc README NEWS
+%{python_sitearch}/xpra/codecs/*
 %license COPYING
 
 %changelog
-* Thu Apr 20 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 1.0.2-1
-- Update to 1.0.2
-- Include x265 and xvid encoders
-
 * Tue Mar 21 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.17.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
