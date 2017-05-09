@@ -1,7 +1,6 @@
 %bcond_without enc_x264
 %bcond_without dec_avcodec2
 %bcond_without csc_swscale
-%bcond_without webp
 
 # These are nececessary as the _with_foo is *not* defined if the
 # --with flag isn't specifed, and we need to have the --without
@@ -18,21 +17,14 @@
 %define _with_csc_swscale --without-csc_swscale
 %endif
 
-%if %{with webp}
-%define _with_webp --with-webp
-%endif
-
 Name:           xpra-codecs-freeworld
-Version:        1.0.2
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
-
-## Set directory path of xvid's header file
-Patch0:         %{name}-xvid.patch
 
 BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel
@@ -40,10 +32,6 @@ BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
 BuildRequires:  Cython
 BuildRequires:  libwebp-devel
-
-%if %{with webp}
-BuildRequires:  libwebp-devel
-%endif
 
 %if %{with enc_x264}
 BuildRequires:  x264-devel
@@ -61,12 +49,9 @@ x264 and ffmpeg.
 
 %prep
 %setup -q -n xpra-%{version}
-%patch0 -p0
 
 %build
 CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
- --with-enc_xvid \
- %{?_with_webp} \
  %{?_with_enc_x264} \
  %{?_with_dec_avcodec2} \
  %{?_with_csc_swscale} \
@@ -92,10 +77,7 @@ cp -pr \
 %if %{with enc_x264}
  enc_x264 \
 %endif
-%if %{with webp}
- webp \
-%endif
- libav_common enc_ffmpeg enc_xvid enc_x265 %{buildroot}%{python2_sitearch}/xpra/codecs/
+ libav_common enc_ffmpeg enc_x265 %{buildroot}%{python2_sitearch}/xpra/codecs/
 popd
 
 #drop shebangs from python_sitearch
@@ -114,6 +96,11 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue May 09 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 2.0.2-1
+- Update to 2.0.2
+- webp option deprecated
+- xvid option deprecated
+
 * Sat Apr 29 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.0.2-2
 - Rebuild for ffmpeg update
 
