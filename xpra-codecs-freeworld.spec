@@ -48,7 +48,7 @@ BuildRequires:  libwebp-devel
 %if %{with enc_x264}
 BuildRequires:  x264-devel
 %endif
-%if %{with dec_avcodec2} || %{with csc_swscale}
+%if %{with dec_avcodec2} || %{without csc_swscale}
 BuildRequires:  ffmpeg-devel
 %endif
 
