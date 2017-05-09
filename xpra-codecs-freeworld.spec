@@ -23,8 +23,8 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        1.0.2
-Release:        2%{?dist}
+Version:        1.0
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
@@ -33,6 +33,10 @@ Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
 ## Set directory path of xvid's header file
 Patch0:         %{name}-xvid.patch
+
+# Fix import error in xpra/codecs/webp/encode.pyx
+# https://www.xpra.org/trac/ticket/1379
+Patch1:         xpra-1.0-webp-encode-fix-import.patch
 
 BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel
@@ -62,6 +66,7 @@ x264 and ffmpeg.
 %prep
 %setup -q -n xpra-%{version}
 %patch0 -p0
+%patch1 -p1
 
 %build
 CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
@@ -114,11 +119,8 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
-* Sat Apr 29 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.0.2-2
-- Rebuild for ffmpeg update
-
-* Thu Apr 20 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 1.0.2-1
-- Update to 1.0.2
+* Tue May 09 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.0-1
+- Update to 1.0
 - Include x265 and xvid encoders
 
 * Tue Mar 21 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.17.5-2
