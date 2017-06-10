@@ -1,0 +1,28 @@
+--- xpra/codecs/enc_ffmpeg/encoder.orig.pyx	2017-03-17 08:24:28.000000000 +0100
++++ xpra/codecs/enc_ffmpeg/encoder.pyx	2017-05-10 12:23:37.728332187 +0200
+@@ -125,10 +125,10 @@
+     int FF_PROFILE_H264_HIGH
+     int FF_PROFILE_H264_HIGH_10
+     int FF_PROFILE_H264_HIGH_10_INTRA
+-    int FF_PROFILE_H264_MULTIVIEW_HIGH
++#    int FF_PROFILE_H264_MULTIVIEW_HIGH
+     int FF_PROFILE_H264_HIGH_422
+     int FF_PROFILE_H264_HIGH_422_INTRA
+-    int FF_PROFILE_H264_STEREO_HIGH
++#    int FF_PROFILE_H264_STEREO_HIGH
+     int FF_PROFILE_H264_HIGH_444
+     int FF_PROFILE_H264_HIGH_444_PREDICTIVE
+     int FF_PROFILE_H264_HIGH_444_INTRA
+@@ -446,10 +446,10 @@
+     FF_PROFILE_H264_HIGH                    : "high",
+     FF_PROFILE_H264_HIGH_10                 : "high10",
+     FF_PROFILE_H264_HIGH_10_INTRA           : "high10 intra",
+-    FF_PROFILE_H264_MULTIVIEW_HIGH          : "multiview high",
++#    FF_PROFILE_H264_MULTIVIEW_HIGH          : "multiview high",
+     FF_PROFILE_H264_HIGH_422                : "high422",
+     FF_PROFILE_H264_HIGH_422_INTRA          : "high422 intra",
+-    FF_PROFILE_H264_STEREO_HIGH             : "stereo high",
++#    FF_PROFILE_H264_STEREO_HIGH             : "stereo high",
+     FF_PROFILE_H264_HIGH_444                : "high444",
+     FF_PROFILE_H264_HIGH_444_PREDICTIVE     : "high444 predictive",
+     FF_PROFILE_H264_HIGH_444_INTRA          : "high444 intra",
