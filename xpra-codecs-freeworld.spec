@@ -1,23 +1,50 @@
+%bcond_without enc_x264
+%bcond_without dec_avcodec2
+%bcond_without csc_swscale
+
+# These are nececessary as the _with_foo is *not* defined if the
+# --with flag isn't specifed, and we need to have the --without
+# specified option in that case.
+%if %{without enc_x264}
+%define _with_enc_x264 --without-enc_x264
+%endif
+
+%if %{without dec_avcodec2}
+%define _with_dec_avcodec2 --without-dec_avcodec2
+%endif
+
+%if %{without csc_swscale}
+%define _with_csc_swscale --without-csc_swscale
+%endif
+
 Name:           xpra-codecs-freeworld
-Version:        0.17.5
-Release:        1%{?dist}
+Version:        2.0.2
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
+##Patch for building xpra with ffmpeg-3.1
+Patch0:         %{name}-0002-Add-patch-to-allow-building-against-ffmpeg-3.1.patch
+
 BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel
-BuildRequires:  libxkbfile-devel
+BuildRequires:  libxkbfile-devel, libvpx-devel
+BuildRequires:  xvidcore-devel, x265-devel
 BuildRequires:  Cython
-BuildRequires:  desktop-file-utils
 BuildRequires:  libwebp-devel
-BuildRequires:  x264-devel
-BuildRequires:  ffmpeg-devel
 
-Requires:       xpra = %{version}
-Requires:       gstreamer1-plugins-ugly
+%if %{with enc_x264}
+BuildRequires:  x264-devel
+%endif
+%if %{with dec_avcodec2} || %{with csc_swscale}
+BuildRequires:  ffmpeg-devel
+%endif
+
+Requires:       xpra%{?isa} = %{version}
+Requires:       gstreamer1-plugins-ugly%{?isa}
 
 %description
 Provides support for H.264 encoding and swscale support in xpra using
@@ -26,38 +53,74 @@ x264 and ffmpeg.
 %prep
 %setup -q -n xpra-%{version}
 
+%if 0%{?fedora} < 26
+%patch0 -p0
+%endif
 
 %build
-CFLAGS="%{optflags}" %{__python} setup.py build \
-    --with-enc_x264 \
-    --with-dec_avcodec2 \
-    --with-csc_swscale \
-    --with-Xdummy \
-    --with-Xdummy_wrapper
+CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
+ %{?_with_enc_x264} \
+ %{?_with_dec_avcodec2} \
+ %{?_with_csc_swscale} \
+ --with-Xdummy \
+ --with-Xdummy_wrapper \
+ --without-html5 \
+ --without-tests \
+ --with-verbose
 
 %install
-mkdir destdir
-%{__python} setup.py install --skip-build --root destdir
+%{__python2} setup.py  install -O1 --skip-build --root destdir
 
-mkdir -p %{buildroot}%{python_sitearch}/xpra/codecs/
-pushd destdir%{python_sitearch}/xpra/codecs/
-cp -pr csc_swscale dec_avcodec2 enc_x264 libav_common \
-        %{buildroot}%{python_sitearch}/xpra/codecs/
+## We are interested to additional codecs only
+mkdir -p %{buildroot}%{python2_sitearch}/xpra/codecs/
+pushd destdir%{python2_sitearch}/xpra/codecs/
+cp -pr \
+%if %{with csc_swscale}
+ csc_swscale \
+%endif
+%if %{with dec_avcodec2}
+ dec_avcodec2 \
+%endif
+%if %{with enc_x264}
+ enc_x264 \
+%endif
+ libav_common enc_ffmpeg enc_x265 %{buildroot}%{python2_sitearch}/xpra/codecs/
 popd
 
 #drop shebangs from python_sitearch
-find %{buildroot}%{python_sitearch}/xpra -name '*.py' \
+find %{buildroot}%{python2_sitearch}/xpra -name '*.py' \
     -exec sed -i '1{\@^#!/usr/bin/env python@d}' {} \;
     
 #fix permissions on shared objects
-find %{buildroot}%{python_sitearch}/xpra -name '*.so' \
+find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
     -exec chmod 0755 {} \;
 
 %files
-%{python_sitearch}/xpra/codecs/*
+%dir %{python2_sitearch}/xpra
+%dir %{python2_sitearch}/xpra/codecs
+%{python2_sitearch}/xpra/codecs/*
+%doc README NEWS
 %license COPYING
 
 %changelog
+* Wed May 10 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 2.0.2-2
+- Patched for building against ffmpeg-3.1 (f25)
+
+* Tue May 09 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 2.0.2-1
+- Update to 2.0.2
+- webp option deprecated
+- xvid option deprecated
+
+* Sat Apr 29 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.0.2-2
+- Rebuild for ffmpeg update
+
+* Thu Apr 20 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 1.0.2-1
+- Update to 1.0.2
+- Include x265 and xvid encoders
+
+* Tue Mar 21 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.17.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Sun Sep 11 2016 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.17.5-1
 - Update to 0.17.5
 - Remove xpra-0.17.x-12944.patch
