@@ -18,7 +18,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.0.3
+Version:        2.1
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -35,6 +35,7 @@ BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
 BuildRequires:  Cython
 BuildRequires:  libwebp-devel
+BuildRequires:  libXdamage-devel
 
 %if %{with enc_x264}
 BuildRequires:  x264-devel
@@ -103,6 +104,9 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Wed Jul 26 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 2.1-1
+- Update to 2.1
+
 * Tue Jul 04 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 2.0.3-1
 - Update to 2.0.3
 
