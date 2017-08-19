@@ -18,7 +18,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.1
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -33,7 +33,7 @@ BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
-BuildRequires:  Cython
+BuildRequires:  Cython, ack
 BuildRequires:  libwebp-devel
 BuildRequires:  libXdamage-devel
 
@@ -88,9 +88,11 @@ cp -pr \
  libav_common enc_ffmpeg enc_x265 %{buildroot}%{python2_sitearch}/xpra/codecs/
 popd
 
-#drop shebangs from python_sitearch
-find %{buildroot}%{python2_sitearch}/xpra -name '*.py' \
-    -exec sed -i '1{\@^#!/usr/bin/env python@d}' {} \;
+#fix shebangs from python2_sitearch
+find %{buildroot}%{python2_sitearch}/xpra -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python2}|'
+for i in `ack -rl '^#!/.*python' %{buildroot}%{python2_sitearch}/xpra`; do
+    chmod 0755 $i
+done
     
 #fix permissions on shared objects
 find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
@@ -104,6 +106,9 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sat Aug 19 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 2.1.1-1
+- Update to 2.1.1
+
 * Wed Jul 26 2017 Antonio Trande <sagitter@fedoraproject.org.com> - 2.1-1
 - Update to 2.1
 
