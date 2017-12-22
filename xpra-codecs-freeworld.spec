@@ -18,7 +18,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.1.3
+Version:        2.2
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -26,11 +26,8 @@ License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
-##Patch for building xpra with ffmpeg-3.1
-Patch0:         %{name}-0002-Add-patch-to-allow-building-against-ffmpeg-3.1.patch
-
 BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
-BuildRequires:  libXtst-devel
+BuildRequires:  libXtst-devel, uglify-js
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
 BuildRequires:  Cython, ack
@@ -54,10 +51,6 @@ x264 and ffmpeg.
 %prep
 %setup -q -n xpra-%{version}
 
-%if 0%{?fedora} < 26
-%patch0 -p0
-%endif
-
 %build
 CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
  %{?_with_enc_x264} \
@@ -65,12 +58,15 @@ CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s"
  %{?_with_csc_swscale} \
  --with-Xdummy \
  --with-Xdummy_wrapper \
+ --with-enc_ffmpeg \
  --without-html5 \
  --without-tests \
- --with-verbose
+ --with-verbose \
+ --without-html5_gzip --without-html5_brotli
 
 %install
-%{__python2} setup.py  install -O1 --skip-build --root destdir
+%{__python2} setup.py  install -O1 --skip-build --root destdir \
+ --without-html5_gzip --without-html5_brotli
 
 ## We are interested to additional codecs only
 mkdir -p %{buildroot}%{python2_sitearch}/xpra/codecs/
@@ -106,6 +102,10 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue Dec 12 2017 Antonio Trande <sagitter@fedoraproject.org> - 2.2-1
+- Update to 2.2
+- Drop old ffmpeg-3.1 patch
+
 * Thu Oct 26 2017 Antonio Trande <sagitter@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 
