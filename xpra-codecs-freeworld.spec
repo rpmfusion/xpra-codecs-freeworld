@@ -26,6 +26,11 @@ License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
+# http://xpra.org/trac/changeset/18086/xpra
+# http://xpra.org/trac/changeset/18088/xpra
+# Build fix for ffmpeg-3.5
+Patch0:         %{name}-ffmpeg35.patch
+
 BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel, uglify-js
 BuildRequires:  libxkbfile-devel, libvpx-devel
@@ -50,6 +55,9 @@ x264 and ffmpeg.
 
 %prep
 %setup -q -n xpra-%{version}
+%if 0%{?fedora} > 27
+%patch0 -p1
+%endif
 
 %build
 CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
@@ -102,8 +110,9 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
-* Thu Jan 18 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.3-1
+* Sun Jan 21 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.3-1
 - Update to 2.2.3
+- Patched for ffmpeg-3.5
 
 * Thu Jan 18 2018 Leigh Scott <leigh123linux@googlemail.com> - 2.2.2-2
 - Rebuilt for ffmpeg-3.5 git
