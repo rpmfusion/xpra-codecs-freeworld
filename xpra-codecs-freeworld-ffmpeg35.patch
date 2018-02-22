@@ -1,19 +1,3 @@
---- src/xpra/codecs/dec_avcodec2/decoder.pyx	(revision 18085)
-+++ src/xpra/codecs/dec_avcodec2/decoder.pyx	(revision 18086)
-@@ -53,5 +53,5 @@
- 
- cdef extern from "libavcodec/avcodec.h":
--    int CODEC_FLAG2_FAST
-+    int AV_CODEC_FLAG2_FAST
- 
-     ctypedef struct AVFrame:
-@@ -359,5 +359,5 @@
-         self.codec_ctx.thread_type = 2      #FF_THREAD_SLICE: allow more than one thread per frame
-         self.codec_ctx.thread_count = 0     #auto
--        self.codec_ctx.flags2 |= CODEC_FLAG2_FAST   #may cause "no deblock across slices" - which should be fine
-+        self.codec_ctx.flags2 |= AV_CODEC_FLAG2_FAST    #may cause "no deblock across slices" - which should be fine
-         r = avcodec_open2(self.codec_ctx, self.codec, NULL)
-         if r<0:
 --- src/xpra/codecs/enc_ffmpeg/encoder.pyx	(revision 18087)
 +++ src/xpra/codecs/enc_ffmpeg/encoder.pyx	(revision 18088)
 @@ -135,42 +135,34 @@
