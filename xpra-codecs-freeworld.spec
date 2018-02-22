@@ -61,7 +61,11 @@ x264 and ffmpeg.
 %endif
 
 %build
+%if 0%{?fedora} > 27
+CFLAGS="%{optflags} -Wno-error=deprecated-declarations" %{__python2} setup.py  build --executable="%{__python2} -s" \
+%else
 CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
+%endif
  %{?_with_enc_x264} \
  %{?_with_dec_avcodec2} \
  %{?_with_csc_swscale} \
@@ -111,10 +115,11 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
-* Fri Feb 09 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-2
+* Thu Feb 22 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-2
 - Fix ?_isa macro
 - Add gcc BR
 - Use python2-Cython BR
+- Disable Werror=deprecated-declarations on fedora > 27
 
 * Fri Feb 09 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-1
 - Update to 2.2.4
