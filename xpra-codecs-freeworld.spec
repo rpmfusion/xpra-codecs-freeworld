@@ -19,7 +19,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        2.2.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
@@ -35,7 +35,8 @@ BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel, uglify-js
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
-BuildRequires:  Cython, ack
+BuildRequires:  python2-Cython, ack
+BuildRequires:  gcc
 BuildRequires:  libwebp-devel
 BuildRequires:  libXdamage-devel
 
@@ -46,8 +47,8 @@ BuildRequires:  x264-devel
 BuildRequires:  ffmpeg-devel
 %endif
 
-Requires:       xpra%{?isa} = %{version}
-Requires:       gstreamer1-plugins-ugly%{?isa}
+Requires:       xpra%{?_isa} = %{version}
+Requires:       gstreamer1-plugins-ugly%{?_isa}
 
 %description
 Provides support for H.264 encoding and swscale support in xpra using
@@ -110,6 +111,11 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Fri Feb 09 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-2
+- Fix ?_isa macro
+- Add gcc BR
+- Use python2-Cython BR
+
 * Fri Feb 09 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-1
 - Update to 2.2.4
 - Modify patch for ffmpeg-3.5
