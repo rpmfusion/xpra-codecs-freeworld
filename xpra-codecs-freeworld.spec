@@ -19,7 +19,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        2.2.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
@@ -61,11 +61,7 @@ x264 and ffmpeg.
 %endif
 
 %build
-%if 0%{?fedora} > 27
-CFLAGS="%{optflags} -Wno-error=deprecated-declarations" %{__python2} setup.py  build --executable="%{__python2} -s" \
-%else
 CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
-%endif
  %{?_with_enc_x264} \
  %{?_with_dec_avcodec2} \
  %{?_with_csc_swscale} \
@@ -75,6 +71,9 @@ CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s"
  --without-html5 \
  --without-tests \
  --with-verbose \
+%if 0%{?fedora} > 27
+ --without-strict \
+%endif
  --without-html5_gzip --without-html5_brotli
 
 %install
@@ -115,6 +114,9 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Fri Feb 23 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-3
+- Use --without-strict option (upstream bug #1772)
+
 * Thu Feb 22 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-2
 - Fix ?_isa macro
 - Add gcc BR
