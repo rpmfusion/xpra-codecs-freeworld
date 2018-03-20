@@ -18,8 +18,8 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.2.4
-Release:        1%{?dist}
+Version:        2.2.5
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
@@ -35,7 +35,8 @@ BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
 BuildRequires:  libXtst-devel, uglify-js
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
-BuildRequires:  Cython, ack
+BuildRequires:  python2-Cython, ack
+BuildRequires:  gcc
 BuildRequires:  libwebp-devel
 BuildRequires:  libXdamage-devel
 
@@ -46,8 +47,8 @@ BuildRequires:  x264-devel
 BuildRequires:  ffmpeg-devel
 %endif
 
-Requires:       xpra%{?isa} = %{version}
-Requires:       gstreamer1-plugins-ugly%{?isa}
+Requires:       xpra%{?_isa} = %{version}
+Requires:       gstreamer1-plugins-ugly%{?_isa}
 
 %description
 Provides support for H.264 encoding and swscale support in xpra using
@@ -71,6 +72,9 @@ CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s"
  --without-html5 \
  --without-tests \
  --with-verbose \
+%if 0%{?fedora} > 27
+ --without-strict \
+%endif
  --without-html5_gzip --without-html5_brotli
 
 %install
@@ -111,6 +115,24 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Thu Mar 08 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 2.2.5-2
+- Rebuilt for new ffmpeg snapshot
+
+* Wed Mar 07 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.5-1
+- Update to 2.2.5
+
+* Wed Feb 28 2018 Nicolas Chauvet <kwizart@gmail.com> - 2.2.4-4
+- Rebuilt for x265
+
+* Fri Feb 23 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-3
+- Use --without-strict option (upstream bug #1772)
+
+* Thu Feb 22 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-2
+- Fix ?_isa macro
+- Add gcc BR
+- Use python2-Cython BR
+- Disable Werror=deprecated-declarations on fedora > 27
+
 * Fri Feb 09 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.4-1
 - Update to 2.2.4
 - Modify patch for ffmpeg-3.5
