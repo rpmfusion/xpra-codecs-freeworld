@@ -18,8 +18,8 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.2.5
-Release:        2%{?dist}
+Version:        2.2.6
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
@@ -114,6 +114,9 @@ find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue Apr 03 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.6-1
+- Update to 2.2.6
+
 * Thu Mar 08 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 2.2.5-2
 - Rebuilt for new ffmpeg snapshot
 
