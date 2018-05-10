@@ -18,7 +18,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.2.6
+Version:        2.3
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
@@ -26,16 +26,12 @@ License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
-# http://xpra.org/trac/changeset/18086/xpra
-# http://xpra.org/trac/changeset/18088/xpra
-# Build fix for ffmpeg-3.5
-Patch0:         %{name}-ffmpeg35.patch
-
-BuildRequires:  python2-devel pygobject2-devel pygtk2-devel
+BuildRequires:  python3-devel pygobject3-devel pygtk2-devel
+BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel, uglify-js
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
-BuildRequires:  python2-Cython, ack
+BuildRequires:  python3-Cython, ack
 BuildRequires:  gcc
 BuildRequires:  libwebp-devel
 BuildRequires:  libXdamage-devel
@@ -56,12 +52,9 @@ x264 and ffmpeg.
 
 %prep
 %setup -q -n xpra-%{version}
-%if 0%{?fedora} > 27
-%patch0 -p1
-%endif
 
 %build
-CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s" \
+CFLAGS="%{optflags}" %{__python3} setup.py  build --executable="%{__python3} -s" \
  %{?_with_enc_x264} \
  %{?_with_dec_avcodec2} \
  %{?_with_csc_swscale} \
@@ -77,12 +70,12 @@ CFLAGS="%{optflags}" %{__python2} setup.py  build --executable="%{__python2} -s"
  --without-html5_gzip --without-html5_brotli
 
 %install
-%{__python2} setup.py  install -O1 --skip-build --root destdir \
+%{__python3} setup.py  install -O1 --skip-build --root destdir \
  --without-html5_gzip --without-html5_brotli
 
 ## We are interested to additional codecs only
-mkdir -p %{buildroot}%{python2_sitearch}/xpra/codecs/
-pushd destdir%{python2_sitearch}/xpra/codecs/
+mkdir -p %{buildroot}%{python3_sitearch}/xpra/codecs/
+pushd destdir%{python3_sitearch}/xpra/codecs/
 cp -pr \
 %if %{with csc_swscale}
  csc_swscale \
@@ -93,27 +86,32 @@ cp -pr \
 %if %{with enc_x264}
  enc_x264 \
 %endif
- libav_common enc_ffmpeg enc_x265 %{buildroot}%{python2_sitearch}/xpra/codecs/
+ libav_common enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
 popd
 
-#fix shebangs from python2_sitearch
-find %{buildroot}%{python2_sitearch}/xpra -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python2}|'
-for i in `ack -rl '^#!/.*python' %{buildroot}%{python2_sitearch}/xpra`; do
+#fix shebangs from python3_sitearch
+find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python3}|'
+for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
     chmod 0755 $i
 done
     
 #fix permissions on shared objects
-find %{buildroot}%{python2_sitearch}/xpra -name '*.so' \
+find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
     -exec chmod 0755 {} \;
 
 %files
-%dir %{python2_sitearch}/xpra
-%dir %{python2_sitearch}/xpra/codecs
-%{python2_sitearch}/xpra/codecs/*
+%dir %{python3_sitearch}/xpra
+%dir %{python3_sitearch}/xpra/codecs
+%{python3_sitearch}/xpra/codecs/*
 %doc README NEWS
 %license COPYING
 
 %changelog
+* Thu May 10 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.3-1
+- Update to 2.3
+- Switch to Python3
+- Drop obsolete patch
+
 * Tue Apr 03 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.2.6-1
 - Update to 2.2.6
 
