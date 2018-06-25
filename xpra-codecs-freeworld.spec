@@ -2,6 +2,23 @@
 %bcond_without dec_avcodec2
 %bcond_without csc_swscale
 
+# For debugging only
+%bcond_with debug
+%if !%{without debug}
+%define _with_debug --with-debug
+%endif
+#
+
+# xpra does not work with Python3 yet
+# Probably starting from Fedora 33, Python 2 will be no longer supported
+%if %{?fedora} < 33
+%global py_prefix 2
+%global pythonx_sitearch %python2_sitearch
+%else
+%global py_prefix 3
+%global pythonx_sitearch %python3_sitearch
+%endif
+
 # These are nececessary as the _with_foo is *not* defined if the
 # --with flag isn't specifed, and we need to have the --without
 # specified option in that case.
@@ -19,22 +36,25 @@
 
 Name:           xpra-codecs-freeworld
 Version:        2.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
-BuildRequires:  python3-devel pygobject3-devel pygtk2-devel
+BuildRequires:  python%py_prefix-devel pygobject%py_prefix-devel pygtk2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel, uglify-js
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
-BuildRequires:  python3-Cython, ack
+BuildRequires:  python%py_prefix-Cython, ack
 BuildRequires:  gcc
 BuildRequires:  libwebp-devel
 BuildRequires:  libXdamage-devel
+%if %{with debug}
+BuildRequires: libasan
+%endif
 
 %if %{with enc_x264}
 BuildRequires:  x264-devel
@@ -54,10 +74,11 @@ x264 and ffmpeg.
 %setup -q -n xpra-%{version}
 
 %build
-CFLAGS="%{optflags}" %{__python3} setup.py  build --executable="%{__python3} -s" \
+CFLAGS="%{optflags}" %{_bindir}/python%py_prefix setup.py  build --executable="%{_bindir}/python%py_prefix -s" \
  %{?_with_enc_x264} \
  %{?_with_dec_avcodec2} \
  %{?_with_csc_swscale} \
+ %{?_with_debug} \
  --with-Xdummy \
  --with-Xdummy_wrapper \
  --with-enc_ffmpeg \
@@ -70,12 +91,12 @@ CFLAGS="%{optflags}" %{__python3} setup.py  build --executable="%{__python3} -s"
  --without-html5_gzip --without-html5_brotli
 
 %install
-%{__python3} setup.py  install -O1 --skip-build --root destdir \
+%{_bindir}/python%py_prefix setup.py  install -O1 --skip-build --root destdir \
  --without-html5_gzip --without-html5_brotli
 
 ## We are interested to additional codecs only
-mkdir -p %{buildroot}%{python3_sitearch}/xpra/codecs/
-pushd destdir%{python3_sitearch}/xpra/codecs/
+mkdir -p %{buildroot}%{pythonx_sitearch}/xpra/codecs/
+pushd destdir%{pythonx_sitearch}/xpra/codecs/
 cp -pr \
 %if %{with csc_swscale}
  csc_swscale \
@@ -86,27 +107,31 @@ cp -pr \
 %if %{with enc_x264}
  enc_x264 \
 %endif
- libav_common enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
+ libav_common enc_ffmpeg enc_x265 %{buildroot}%{pythonx_sitearch}/xpra/codecs/
 popd
 
-#fix shebangs from python3_sitearch
-find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python3}|'
-for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
+#fix shebangs from pythonX_sitearch
+find %{buildroot}%{pythonx_sitearch}/xpra -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{_bindir}/python%py_prefix|'
+for i in `ack -rl '^#!/.*python' %{buildroot}%{pythonx_sitearch}/xpra`; do
     chmod 0755 $i
 done
     
 #fix permissions on shared objects
-find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
+find %{buildroot}%{pythonx_sitearch}/xpra -name '*.so' \
     -exec chmod 0755 {} \;
 
 %files
-%dir %{python3_sitearch}/xpra
-%dir %{python3_sitearch}/xpra/codecs
-%{python3_sitearch}/xpra/codecs/*
+%dir %{pythonx_sitearch}/xpra
+%dir %{pythonx_sitearch}/xpra/codecs
+%{pythonx_sitearch}/xpra/codecs/*
 %doc README NEWS
 %license COPYING
 
 %changelog
+* Sun Jun 24 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.3.1-2
+- Define build conditions for debugging
+- Switch back to Python2 (see xpra.org/trac/ticket/1885) (bz#1583319)
+
 * Wed May 30 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.3.1-1
 - Update to 2.3.1
 
