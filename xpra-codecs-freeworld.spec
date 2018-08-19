@@ -36,7 +36,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        2.3.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 
 License:        GPLv2+
@@ -128,6 +128,9 @@ find %{buildroot}%{pythonx_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Aug 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 2.3.2-3
+- Rebuilt for Fedora 29 Mass Rebuild binutils issue
+
 * Fri Jul 27 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 2.3.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
