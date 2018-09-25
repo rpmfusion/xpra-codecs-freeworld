@@ -9,9 +9,9 @@
 %endif
 #
 
-# xpra does not work with Python3 yet
-# Probably starting from Fedora 33, Python 2 will be no longer supported
-%if %{?fedora} < 33
+# xpra does not correctly work with Python3 yet
+# Starting from Fedora 30, Python 2 will be no longer supported
+%if %{?fedora} < 30
 %global py_prefix 2
 %global pythonx_sitearch %python2_sitearch
 %else
@@ -35,15 +35,16 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.3.3
+Version:        2.3.4
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
-
 License:        GPLv2+
 URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
-BuildRequires:  python%py_prefix-devel pygobject%py_prefix-devel pygtk2-devel
+BuildRequires:  python%py_prefix-devel
+BuildRequires:  pygobject%py_prefix-devel
+BuildRequires:  pygtk2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel, uglify-js
 BuildRequires:  libxkbfile-devel, libvpx-devel
@@ -71,7 +72,7 @@ Provides support for H.264 encoding and swscale support in xpra using
 x264 and ffmpeg.
 
 %prep
-%setup -q -n xpra-%{version}
+%autosetup -n xpra-%{version}
 
 %build
 CFLAGS="%{optflags}" %{_bindir}/python%py_prefix setup.py  build --executable="%{_bindir}/python%py_prefix -s" \
@@ -128,6 +129,9 @@ find %{buildroot}%{pythonx_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Sep 23 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.3.4-1
+- Update to 2.3.4
+
 * Sun Aug 19 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.3.3-1
 - Update to 2.3.3
 
