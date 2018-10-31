@@ -35,7 +35,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        2.4
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
@@ -44,6 +44,7 @@ Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
 BuildRequires:  python%py_prefix-devel
 BuildRequires:  pygobject%py_prefix-devel
+BuildRequires:  python%py_prefix-cairo-devel
 BuildRequires:  pygtk2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel, uglify-js
@@ -129,6 +130,10 @@ find %{buildroot}%{pythonx_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Wed Oct 31 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
+- Add Python Cairo library BR
+
 * Mon Oct 15 2018 Antonio Trande <sagitter@fedoraproject.org> - 2.4-1
 - Update to 2.4
 
