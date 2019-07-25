@@ -122,6 +122,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 - Release to 2.5.3
 - Switch to Python3 definitively
 
+* Tue Jul 02 2019 Nicolas Chauvet <kwizart@gmail.com> - 2.5.2-2
+- Rebuilt for x265
+
 * Sat Jun 08 2019 Antonio Trande <sagitter@fedoraproject.org> - 2.5.2-1
 - Release to 2.5.2
 
