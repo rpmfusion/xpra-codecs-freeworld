@@ -26,7 +26,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        2.5.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            http://www.xpra.org/
@@ -118,6 +118,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sat Aug 24 2019 Leigh Scott <leigh123linux@gmail.com> - 2.5.3-3
+- Rebuild for python-3.8
+
 * Wed Aug 07 2019 Leigh Scott <leigh123linux@gmail.com> - 2.5.3-2
 - Rebuild for new ffmpeg version
 
