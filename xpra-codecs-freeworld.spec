@@ -25,7 +25,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        3.0.1
+Version:        3.0.2
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
@@ -68,6 +68,11 @@ x264 and ffmpeg.
 
 %prep
 %autosetup -n xpra-%{version}
+
+# cc1: error: unrecognized compiler option ‘-mfpmath=387’
+%ifarch %{arm}
+sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
+%endif
 
 %build
 CFLAGS="%{optflags}" %{__python3} setup.py  build --executable="%{__python3} -s" \
@@ -122,6 +127,10 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue Nov 05 2019 Antonio Trande <sagitter@fedoraproject.org> - 3.0.2-1
+- Release 3.0.2
+- Replace unrecognized compiler option on ARM
+
 * Mon Oct 28 2019 Antonio Trande <sagitter@fedoraproject.org> - 3.0.1-1
 - Release 3.0.1
 
