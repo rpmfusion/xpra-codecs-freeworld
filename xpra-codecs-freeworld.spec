@@ -5,7 +5,7 @@
 # For debugging only
 %bcond_with debug
 %if !%{without debug}
-%define _with_debug --with-debug
+%global _with_debug --with-debug
 %endif
 #
 
@@ -13,20 +13,20 @@
 # --with flag isn't specifed, and we need to have the --without
 # specified option in that case.
 %if %{without enc_x264}
-%define _with_enc_x264 --without-enc_x264
+%global _with_enc_x264 --without-enc_x264
 %endif
 
 %if %{without dec_avcodec2}
-%define _with_dec_avcodec2 --without-dec_avcodec2
+%global _with_dec_avcodec2 --without-dec_avcodec2
 %endif
 
 %if %{without csc_swscale}
-%define _with_csc_swscale --without-csc_swscale
+%global _with_csc_swscale --without-csc_swscale
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        3.0.3
-Release:        2%{?dist}
+Version:        3.0.5
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            http://www.xpra.org/
@@ -75,8 +75,7 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 %endif
 
 %build
-CFLAGS="%{optflags}" %{__python3} setup.py  build --executable="%{__python3} -s" \
- %{?_with_enc_x264} \
+%py3_build -- %{?_with_enc_x264} \
  %{?_with_dec_avcodec2} \
  %{?_with_csc_swscale} \
  %{?_with_debug} \
@@ -90,8 +89,7 @@ CFLAGS="%{optflags}" %{__python3} setup.py  build --executable="%{__python3} -s"
  --without-html5_gzip --without-html5_brotli
 
 %install
-%{__python3} setup.py  install -O1 --skip-build --root destdir \
- --without-html5_gzip --without-html5_brotli
+%py3_install -- --root destdir --without-html5_gzip --without-html5_brotli
 
 ## We are interested to additional codecs only
 mkdir -p %{buildroot}%{python3_sitearch}/xpra/codecs/
@@ -127,6 +125,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Fri Jan 10 2020 Antonio Trande <sagitter@fedoraproject.org> - 3.0.5-1
+- Release 3.0.5
+
 * Tue Dec 17 2019 Leigh Scott <leigh123linux@gmail.com> - 3.0.3-2
 - Mass rebuild for x264
 
