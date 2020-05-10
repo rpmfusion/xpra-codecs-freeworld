@@ -25,7 +25,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        3.0.9
+Version:        4.0
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
@@ -33,11 +33,7 @@ URL:            http://www.xpra.org/
 Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
 
 BuildRequires:  python3-devel
-%if 0%{?fedora} > 30
 BuildRequires:  python3-gobject-devel
-%else
-BuildRequires:  pygobject3-devel
-%endif
 BuildRequires:  python3-cairo-devel
 BuildRequires:  pygtk2-devel
 BuildRequires:  gtk3-devel
@@ -108,7 +104,7 @@ cp -pr \
 popd
 
 #fix shebangs from python3_sitearch
-find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python3}|'
+find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs pathfix.py -pn -i "%{__python3}"
 for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
     chmod 0755 $i
 done
@@ -125,6 +121,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun May 10 2020 Antonio Trande <sagitter@fedoraproject.org> - 4.0-1
+- Release 4.0
+
 * Tue Apr 14 2020 Antonio Trande <sagitter@fedoraproject.org> - 3.0.9-1
 - Release 3.0.9
 
