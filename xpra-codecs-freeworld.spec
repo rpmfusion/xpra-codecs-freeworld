@@ -25,12 +25,12 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        4.0.6
-Release:        2%{?dist}
+Version:        4.1
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            http://www.xpra.org/
-Source0:        http://xpra.org/src/xpra-%{version}.tar.xz
+Source0:        https://github.com/Xpra-org/xpra/archive/v%{version}/xpra-%{version}.tar.gz
 
 BuildRequires:  python3-devel
 BuildRequires:  python3-gobject-devel
@@ -44,6 +44,11 @@ BuildRequires:  python3-Cython, ack
 BuildRequires:  gcc
 BuildRequires:  libwebp-devel
 BuildRequires:  libXdamage-devel
+BuildRequires:  xorg-x11-server-Xorg
+BuildRequires:  xorg-x11-drv-dummy
+BuildRequires:  xorg-x11-xauth
+BuildRequires:  xkbcomp, setxkbmap
+BuildRequires:  pandoc
 %if %{with debug}
 BuildRequires: libasan
 %endif
@@ -78,14 +83,13 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
  --with-Xdummy \
  --with-Xdummy_wrapper \
  --with-enc_ffmpeg \
- --without-html5 \
  --without-tests \
  --with-verbose \
  --without-strict \
- --without-html5_gzip --without-html5_brotli
+ --without-docs
 
 %install
-%py3_install -- --root destdir --without-html5_gzip --without-html5_brotli
+%py3_install -- --root destdir
 
 ## We are interested to additional codecs only
 mkdir -p %{buildroot}%{python3_sitearch}/xpra/codecs/
@@ -105,6 +109,7 @@ popd
 
 #fix shebangs from python3_sitearch
 find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs pathfix.py -pn -i "%{__python3}"
+find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs chmod 0755
 for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
     chmod 0755 $i
 done
@@ -112,15 +117,18 @@ done
 #fix permissions on shared objects
 find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
     -exec chmod 0755 {} \;
-
+    
 %files
 %dir %{python3_sitearch}/xpra
 %dir %{python3_sitearch}/xpra/codecs
 %{python3_sitearch}/xpra/codecs/*
-%doc README NEWS
+%doc README.md
 %license COPYING
 
 %changelog
+* Mon Mar 01 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.1-1
+- Release 4.1
+
 * Thu Feb 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 4.0.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
