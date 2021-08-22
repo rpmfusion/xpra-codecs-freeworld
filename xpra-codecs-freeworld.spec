@@ -1,6 +1,11 @@
 %bcond_without enc_x264
+%ifnarch %{arm}
 %bcond_without dec_avcodec2
 %bcond_without csc_swscale
+%else
+%bcond_with dec_avcodec2
+%bcond_with csc_swscale
+%endif
 
 # For debugging only
 %bcond_with debug
@@ -49,15 +54,13 @@ BuildRequires:  xorg-x11-drv-dummy
 BuildRequires:  xorg-x11-xauth
 BuildRequires:  xkbcomp, setxkbmap
 BuildRequires:  pandoc
+BuildRequires:  ffmpeg-devel
 %if %{with debug}
 BuildRequires: libasan
 %endif
 
 %if %{with enc_x264}
 BuildRequires:  x264-devel
-%endif
-%if %{with dec_avcodec2} || %{with csc_swscale}
-BuildRequires:  ffmpeg-devel
 %endif
 
 Requires:       xpra%{?_isa} = %{version}
@@ -104,7 +107,10 @@ cp -pr \
 %if %{with enc_x264}
  enc_x264 \
 %endif
- libav_common enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
+%ifnarch %{arm}
+ libav_common \
+%endif
+ enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
 popd
 
 #fix shebangs from python3_sitearch
