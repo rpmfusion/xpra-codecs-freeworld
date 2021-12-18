@@ -30,8 +30,8 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        4.2.3
-Release:        2%{?dist}
+Version:        4.3
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            http://www.xpra.org/
@@ -43,6 +43,7 @@ BuildRequires:  python3-cairo-devel
 BuildRequires:  pygtk2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel
+BuildRequires:  libXres-devel
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
 BuildRequires:  python3-Cython, ack
@@ -132,6 +133,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Fri Dec 17 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.3.0-1
+- Release 4.3
+
 * Fri Nov 12 2021 Leigh Scott <leigh123linux@gmail.com> - 4.2.3-2
 - Rebuilt for new ffmpeg snapshot
 
