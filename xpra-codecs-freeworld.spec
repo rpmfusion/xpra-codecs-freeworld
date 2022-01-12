@@ -1,6 +1,11 @@
 %bcond_without enc_x264
+%ifnarch %{arm}
 %bcond_without dec_avcodec2
 %bcond_without csc_swscale
+%else
+%bcond_with dec_avcodec2
+%bcond_with csc_swscale
+%endif
 
 # For debugging only
 %bcond_with debug
@@ -25,12 +30,12 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        4.1.3
+Version:        4.3
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            http://www.xpra.org/
-Source0:        https://github.com/Xpra-org/xpra/archive/v%{version}/xpra-%{version}.tar.gz
+Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
 
 BuildRequires:  python3-devel
 BuildRequires:  python3-gobject-devel
@@ -38,6 +43,7 @@ BuildRequires:  python3-cairo-devel
 BuildRequires:  pygtk2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel
+BuildRequires:  libXres-devel
 BuildRequires:  libxkbfile-devel, libvpx-devel
 BuildRequires:  xvidcore-devel, x265-devel
 BuildRequires:  python3-Cython, ack
@@ -49,15 +55,13 @@ BuildRequires:  xorg-x11-drv-dummy
 BuildRequires:  xorg-x11-xauth
 BuildRequires:  xkbcomp, setxkbmap
 BuildRequires:  pandoc
+BuildRequires:  ffmpeg-devel
 %if %{with debug}
 BuildRequires: libasan
 %endif
 
 %if %{with enc_x264}
 BuildRequires:  x264-devel
-%endif
-%if %{with dec_avcodec2} || %{with csc_swscale}
-BuildRequires:  ffmpeg-devel
 %endif
 
 Requires:       xpra%{?_isa} = %{version}
@@ -104,7 +108,10 @@ cp -pr \
 %if %{with enc_x264}
  enc_x264 \
 %endif
- libav_common enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
+%ifnarch %{arm}
+ libav_common \
+%endif
+ enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
 popd
 
 #fix shebangs from python3_sitearch
@@ -126,6 +133,30 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Fri Dec 17 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.3.0-1
+- Release 4.3
+
+* Fri Nov 12 2021 Leigh Scott <leigh123linux@gmail.com> - 4.2.3-2
+- Rebuilt for new ffmpeg snapshot
+
+* Wed Oct 06 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.2.3-1
+- Release 4.2.3
+
+* Thu Aug 12 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.2.2-1
+- Release 4.2.2
+
+* Tue Aug 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 4.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
+* Sun Jul 11 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.2.1-1
+- Release 4.2.1
+
+* Tue Jun 15 2021 Leigh Scott <leigh123linux@gmail.com> - 4.2-2
+- Rebuild for python-3.10
+
+* Sat May 22 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.2-1
+- Release 4.2
+
 * Wed Apr 21 2021 Antonio Trande <sagitter@fedoraproject.org> - 4.1.3-1
 - Release 4.1.3
 
