@@ -9,7 +9,7 @@
 
 # For debugging only
 %bcond_with debug
-%if !%{without debug}
+%if %{with debug}
 %global _with_debug --with-debug
 %endif
 #
@@ -31,31 +31,48 @@
 
 Name:           xpra-codecs-freeworld
 Version:        4.3.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
-URL:            http://www.xpra.org/
+URL:            https://www.xpra.org/
 Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
 
+# Horrible fix to find py3cairo.h in python3-cairo-1.16.3
+Patch0:         xpra-find_py3cairo.patch
+
+# Install into /usr/libexec always
+Patch1:         xpra-force_always_libexec.patch
+
 BuildRequires:  python3-devel
-BuildRequires:  python3-gobject-devel
-BuildRequires:  python3-cairo-devel
-BuildRequires:  pygtk2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel
-BuildRequires:  libXres-devel
-BuildRequires:  libxkbfile-devel, libvpx-devel
-BuildRequires:  xvidcore-devel, x265-devel
-BuildRequires:  python3-Cython, ack
-BuildRequires:  gcc
-BuildRequires:  libwebp-devel
+BuildRequires:  libxkbfile-devel
+BuildRequires:  python3-Cython
+BuildRequires:  ack
+BuildRequires:  desktop-file-utils
+BuildRequires:  libvpx-devel
 BuildRequires:  libXdamage-devel
+BuildRequires:  libXres-devel
+BuildRequires:  cups-devel, cups
+BuildRequires:  redhat-lsb-core
+BuildRequires:  gcc
+BuildRequires:  pam-devel
+BuildRequires:  pandoc
+%if 0%{?el8}
+BuildRequires:  xorg-x11-server-Xvfb
+BuildRequires:  python3-cairo
+BuildRequires:  cairo-devel
+BuildRequires:  pygobject3-devel
+%else
+BuildRequires:  python3-gobject-devel
+BuildRequires:  libappstream-glib
+BuildRequires:  python3-cairo-devel
 BuildRequires:  xorg-x11-server-Xorg
 BuildRequires:  xorg-x11-drv-dummy
 BuildRequires:  xorg-x11-xauth
-BuildRequires:  xkbcomp, setxkbmap
-BuildRequires:  pandoc
-BuildRequires:  ffmpeg-devel
+BuildRequires:  xkbcomp
+BuildRequires:  setxkbmap
+%endif
 %if %{with debug}
 BuildRequires: libasan
 %endif
@@ -63,6 +80,13 @@ BuildRequires: libasan
 %if %{with enc_x264}
 BuildRequires:  x264-devel
 %endif
+%if %{with dec_avcodec2} || %{with csc_swscale}
+BuildRequires:  ffmpeg-devel
+%endif
+
+#BuildRequires:  pygtk2-devel
+BuildRequires:  xvidcore-devel
+BuildRequires:  x265-devel
 
 Requires:       xpra%{?_isa} = %{version}
 Requires:       gstreamer1-plugins-ugly%{?_isa}
@@ -72,7 +96,13 @@ Provides support for H.264 encoding and swscale support in xpra using
 x264 and ffmpeg.
 
 %prep
-%autosetup -n xpra-%{version}
+%autosetup -n xpra-%{version} -N
+
+%if 0%{?el8}
+%patch0 -p1 -b .backup
+%patch1 -p1 -b .backup
+sed -i 's|@@python3_sitearch@@|%{python3_sitearch}|' setup.py
+%endif
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
 %ifarch %{arm}
@@ -80,17 +110,23 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 %endif
 
 %build
-%py3_build -- %{?_with_enc_x264} \
- %{?_with_dec_avcodec2} \
- %{?_with_csc_swscale} \
- %{?_with_debug} \
- --with-Xdummy \
- --with-Xdummy_wrapper \
- --with-enc_ffmpeg \
- --without-tests \
- --with-verbose \
- --without-strict \
- --without-docs
+%set_build_flags
+%if 0%{?el8}
+export CFLAGS="%{build_cflags} -I%{_includedir}/cairo"
+%endif
+%{__python3} setup.py build --executable="%{__python3} -s" \
+    --with-verbose \
+    --with-vpx \
+    %{?_with_enc_x264} \
+    %{?_with_dec_avcodec2} \
+    %{?_with_csc_swscale} \
+    %{?_with_debug} \
+    --with-Xdummy \
+    --with-Xdummy_wrapper \
+    --without-strict \
+    --with-enc_ffmpeg \
+    --without-tests \
+    --without-docs
 
 %install
 %py3_install -- --root destdir
@@ -120,11 +156,11 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs chmod 0755
 for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
     chmod 0755 $i
 done
-    
+
 #fix permissions on shared objects
 find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
     -exec chmod 0755 {} \;
-    
+
 %files
 %dir %{python3_sitearch}/xpra
 %dir %{python3_sitearch}/xpra/codecs
@@ -133,6 +169,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Feb 20 2022 Sérgio Basto <sergio@serjux.com> - 4.3.2-2
+- Sync with Fedora counter part and fix epel 8 build
+
 * Thu Feb 17 2022 Antonio Trande <sagitter@fedoraproject.org> - 4.3.2-1
 - Release 4.3.2
 
