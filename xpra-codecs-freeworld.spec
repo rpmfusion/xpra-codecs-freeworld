@@ -31,7 +31,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        4.3.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -169,6 +169,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Jun 12 2022 Sérgio Basto <sergio@serjux.com> - 4.3.2-3
+- Mass rebuild for x264-0.164
+
 * Sun Feb 20 2022 Sérgio Basto <sergio@serjux.com> - 4.3.2-2
 - Sync with Fedora counter part and fix epel 8 build
 
