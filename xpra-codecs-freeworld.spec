@@ -31,7 +31,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        4.3.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -54,7 +54,7 @@ BuildRequires:  libvpx-devel
 BuildRequires:  libXdamage-devel
 BuildRequires:  libXres-devel
 BuildRequires:  cups-devel, cups
-BuildRequires:  redhat-lsb-core
+BuildRequires:  redhat-rpm-config
 BuildRequires:  gcc
 BuildRequires:  pam-devel
 BuildRequires:  pandoc
@@ -169,6 +169,13 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sat Jun 25 2022 Robert-André Mauchin <zebob.m@gmail.com> - 4.3.2-4
+- Rebuilt for Python 3.11
+- Remove dependency to redhat-lsb-core, not actually used on Fedora and RHEL
+  based distribution. /etc/os-release is instead primarly used for distribution
+  detection.
+- Sync dependencies with upstream recommended
+
 * Sun Jun 12 2022 Sérgio Basto <sergio@serjux.com> - 4.3.2-3
 - Mass rebuild for x264-0.164
 
