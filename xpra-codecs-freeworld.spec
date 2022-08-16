@@ -1,6 +1,6 @@
 %bcond_without enc_x264
 # Theses settings requires 64bit
-%if %{__isa_bits} == 64
+%if 0%{?__isa_bits} == 64
 %bcond_without dec_avcodec2
 %bcond_without csc_swscale
 %else
