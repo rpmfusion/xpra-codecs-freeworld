@@ -1,5 +1,6 @@
 %bcond_without enc_x264
-%ifnarch %{arm}
+# Theses settings requires 64bit
+%if %{__isa_bits} == 64
 %bcond_without dec_avcodec2
 %bcond_without csc_swscale
 %else
@@ -80,9 +81,10 @@ BuildRequires: libasan
 %if %{with enc_x264}
 BuildRequires:  x264-devel
 %endif
-%if %{with dec_avcodec2} || %{with csc_swscale}
+# While ffmpeg-devel should only be needed in theses conditions, setup.py requires it anyway
+#if %%{with dec_avcodec2} || %%{with csc_swscale}
 BuildRequires:  ffmpeg-devel
-%endif
+#endif
 
 #BuildRequires:  pygtk2-devel
 BuildRequires:  xvidcore-devel
@@ -144,7 +146,7 @@ cp -pr \
 %if %{with enc_x264}
  enc_x264 \
 %endif
-%ifnarch %{arm}
+%if %{with dec_avcodec2} || %{with csc_swscale}
  libav_common \
 %endif
  enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
