@@ -23,8 +23,8 @@
 %global _with_enc_x264 --without-enc_x264
 %endif
 
-%if %{without enc_x265}
-%global _with_enc_x265 --without-enc_x265
+%if %{with enc_x265}
+%global _with_enc_x265 --with-enc_x265
 %endif
 
 %if %{without dec_avcodec2}
