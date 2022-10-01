@@ -1,4 +1,5 @@
 %bcond_without enc_x264
+%bcond_without enc_x265
 # Theses settings requires 64bit
 %if 0%{?__isa_bits} == 64
 %bcond_without dec_avcodec2
@@ -15,11 +16,15 @@
 %endif
 #
 
-# These are nececessary as the _with_foo is *not* defined if the
+# These are necessary as the _with_foo is *not* defined if the
 # --with flag isn't specifed, and we need to have the --without
 # specified option in that case.
 %if %{without enc_x264}
 %global _with_enc_x264 --without-enc_x264
+%endif
+
+%if %{without enc_x265}
+%global _with_enc_x265 --without-enc_x265
 %endif
 
 %if %{without dec_avcodec2}
@@ -31,8 +36,8 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        4.3.4
-Release:        2%{?dist}
+Version:        4.4
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -48,6 +53,7 @@ BuildRequires:  python3-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel
 BuildRequires:  libxkbfile-devel
+BuildRequires:  lz4-devel
 BuildRequires:  python3-Cython
 BuildRequires:  ack
 BuildRequires:  desktop-file-utils
@@ -88,7 +94,9 @@ BuildRequires:  ffmpeg-devel
 
 #BuildRequires:  pygtk2-devel
 BuildRequires:  xvidcore-devel
+%if %{with enc_x265}
 BuildRequires:  x265-devel
+%endif
 
 Requires:       xpra%{?_isa} = %{version}
 Requires:       gstreamer1-plugins-ugly%{?_isa}
@@ -120,6 +128,7 @@ export CFLAGS="%{build_cflags} -I%{_includedir}/cairo"
     --with-verbose \
     --with-vpx \
     %{?_with_enc_x264} \
+    %{?_with_enc_x265} \
     %{?_with_dec_avcodec2} \
     %{?_with_csc_swscale} \
     %{?_with_debug} \
@@ -171,6 +180,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sat Oct 01 2022 Antonio Trande <sagitter@fedoraproject.org> - 4.4-1
+- Release 4.4
+
 * Mon Aug 08 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 4.3.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1
