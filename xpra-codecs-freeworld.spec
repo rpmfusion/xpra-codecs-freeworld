@@ -49,6 +49,8 @@ Patch0:         xpra-find_py3cairo.patch
 # Install into /usr/libexec always
 Patch1:         xpra-force_always_libexec.patch
 
+Patch2:         xpra-bug3693.patch
+
 BuildRequires:  python3-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  libXtst-devel
@@ -113,6 +115,8 @@ x264 and ffmpeg.
 %patch1 -p1 -b .backup
 sed -i 's|@@python3_sitearch@@|%{python3_sitearch}|' setup.py
 %endif
+
+%patch2 -p1 -R -b .backup
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
 %ifarch %{arm}
@@ -182,6 +186,7 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %changelog
 * Tue Jan 03 2023 Antonio Trande <sagitter@fedoraproject.org> - 4.4.3-1
 - Release 4.4.3
+- Reverse patch for bug #3693
 
 * Sun Nov 13 2022 Antonio Trande <sagitter@fedoraproject.org> - 4.4.2-1
 - Release 4.4.2
