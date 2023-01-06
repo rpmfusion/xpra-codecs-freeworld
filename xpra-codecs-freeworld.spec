@@ -115,7 +115,6 @@ x264 and ffmpeg.
 %patch1 -p1 -b .backup
 sed -i 's|@@python3_sitearch@@|%{python3_sitearch}|' setup.py
 %endif
-
 %patch2 -p1 -R -b .backup
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
@@ -166,7 +165,7 @@ cp -pr \
 popd
 
 #fix shebangs from python3_sitearch
-find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs pathfix.py -pn -i "%{__python3}"
+find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs %{__python3} %{_rpmconfigdir}/redhat/pathfix.py -pn -i "%{__python3}"
 find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs chmod 0755
 for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
     chmod 0755 $i
