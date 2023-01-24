@@ -37,17 +37,11 @@
 
 Name:           xpra-codecs-freeworld
 Version:        4.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
 Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
-
-# Horrible fix to find py3cairo.h in python3-cairo-1.16.3
-Patch0:         xpra-find_py3cairo.patch
-
-# Install into /usr/libexec always
-Patch1:         xpra-force_always_libexec.patch
 
 Patch2:         xpra-bug3693.patch
 
@@ -64,16 +58,26 @@ BuildRequires:  libXdamage-devel
 BuildRequires:  libXres-devel
 BuildRequires:  cups-devel, cups
 BuildRequires:  redhat-rpm-config
+BuildRequires:  python3-rpm-macros
 BuildRequires:  gcc
 BuildRequires:  pam-devel
 BuildRequires:  pandoc
+# needs by setup.py to detect systemd `sd_listen_ENABLED = POSIX and pkg_config_ok("--exists", "libsystemd")`
+BuildRequires:  systemd-devel
+%if 0%{?fedora}
+BuildRequires:  pkgconfig(libprocps)
+%endif
+BuildRequires:  pkgconfig(libavif)
+BuildRequires:  pkgconfig(libqrencode)
+BuildRequires:  libdrm-devel
+BuildRequires:  pkgconfig(libwebp)
 %if 0%{?el8}
-BuildRequires:  xorg-x11-server-Xvfb
-BuildRequires:  python3-cairo
-BuildRequires:  cairo-devel
+#BuildRequires:  xorg-x11-server-Xvfb
+#BuildRequires:  cairo-devel
 BuildRequires:  pygobject3-devel
 %else
 BuildRequires:  python3-gobject-devel
+%endif
 BuildRequires:  libappstream-glib
 BuildRequires:  python3-cairo-devel
 BuildRequires:  xorg-x11-server-Xorg
@@ -81,7 +85,6 @@ BuildRequires:  xorg-x11-drv-dummy
 BuildRequires:  xorg-x11-xauth
 BuildRequires:  xkbcomp
 BuildRequires:  setxkbmap
-%endif
 %if %{with debug}
 BuildRequires: libasan
 %endif
@@ -110,11 +113,6 @@ x264 and ffmpeg.
 %prep
 %autosetup -n xpra-%{version} -N
 
-%if 0%{?el8}
-%patch0 -p1 -b .backup
-%patch1 -p1 -b .backup
-sed -i 's|@@python3_sitearch@@|%{python3_sitearch}|' setup.py
-%endif
 %patch2 -p1 -R -b .backup
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
@@ -124,9 +122,6 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 
 %build
 %set_build_flags
-%if 0%{?el8}
-export CFLAGS="%{build_cflags} -I%{_includedir}/cairo"
-%endif
 %{__python3} setup.py build --executable="%{__python3} -s" \
     --with-verbose \
     --with-vpx \
@@ -165,9 +160,8 @@ cp -pr \
 popd
 
 #fix shebangs from python3_sitearch
-find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs %{__python3} %{_rpmconfigdir}/redhat/pathfix.py -pn -i "%{__python3}"
-find %{buildroot}%{python3_sitearch}/xpra -name '*.py' | xargs chmod 0755
 for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
+    %py3_shebang_fix $i
     chmod 0755 $i
 done
 
@@ -183,6 +177,10 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue Jan 24 2023 Sérgio Basto <sergio@serjux.com> - 4.4.3-2
+- Sync Fix epel builds, seems upstream sort out py3cairo hack on el8
+- Sync el8 now also have xorg-x11-drv-dummy
+
 * Tue Jan 03 2023 Antonio Trande <sagitter@fedoraproject.org> - 4.4.3-1
 - Release 4.4.3
 - Reverse patch for bug #3693
