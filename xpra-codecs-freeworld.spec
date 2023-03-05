@@ -37,12 +37,13 @@
 
 Name:           xpra-codecs-freeworld
 Version:        4.4.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
 Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
-
+# https://github.com/Xpra-org/xpra/commit/a12c75a65f8fe686837aefbd133274f4089f14ea
+Patch0:         ffmpeg6.patch
 Patch2:         xpra-bug3693.patch
 
 BuildRequires:  python3-devel
@@ -113,6 +114,7 @@ x264 and ffmpeg.
 %prep
 %autosetup -n xpra-%{version} -N
 
+%patch0 -p1 -b .ffmpeg6
 %patch2 -p1 -R -b .backup
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
@@ -177,6 +179,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Mar 05 2023 Leigh Scott <leigh123linux@gmail.com> - 4.4.3-3
+- Rebuild for new ffmpeg
+
 * Tue Jan 24 2023 Sérgio Basto <sergio@serjux.com> - 4.4.3-2
 - Sync Fix epel builds, seems upstream sort out py3cairo hack on el8
 - Sync el8 now also have xorg-x11-drv-dummy
