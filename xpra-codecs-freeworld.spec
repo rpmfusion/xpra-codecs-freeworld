@@ -36,15 +36,13 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        4.4.3
-Release:        3%{?dist}
+Version:        4.4.4
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
 Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
 # https://github.com/Xpra-org/xpra/commit/a12c75a65f8fe686837aefbd133274f4089f14ea
-Patch0:         ffmpeg6.patch
-Patch2:         xpra-bug3693.patch
 
 BuildRequires:  python3-devel
 BuildRequires:  gtk3-devel
@@ -112,10 +110,7 @@ Provides support for H.264 encoding and swscale support in xpra using
 x264 and ffmpeg.
 
 %prep
-%autosetup -n xpra-%{version} -N
-
-%patch0 -p1 -b .ffmpeg6
-%patch2 -p1 -R -b .backup
+%autosetup -p1 -n xpra-%{version}
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
 %ifarch %{arm}
@@ -140,9 +135,9 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
     --without-docs
 
 %install
+# We are interested to additional codecs only
+# so we install it in a custom dir
 %py3_install -- --root destdir
-
-## We are interested to additional codecs only
 mkdir -p %{buildroot}%{python3_sitearch}/xpra/codecs/
 pushd destdir%{python3_sitearch}/xpra/codecs/
 cp -pr \
@@ -179,6 +174,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue Mar 21 2023 Sérgio Basto <sergio@serjux.com> - 4.4.4-1
+- Update xpra-codecs-freeworld to 4.4.4
+
 * Sun Mar 05 2023 Leigh Scott <leigh123linux@gmail.com> - 4.4.3-3
 - Rebuild for new ffmpeg
 
