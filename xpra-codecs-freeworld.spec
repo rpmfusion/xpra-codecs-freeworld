@@ -36,7 +36,7 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        4.4.5
+Version:        4.4.6
 Release:        %autorelease
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
