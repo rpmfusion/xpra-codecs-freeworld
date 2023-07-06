@@ -64,7 +64,7 @@ BuildRequires:  pandoc
 # needs by setup.py to detect systemd `sd_listen_ENABLED = POSIX and pkg_config_ok("--exists", "libsystemd")`
 BuildRequires:  systemd-devel
 %if 0%{?fedora}
-BuildRequires:  pkgconfig(libprocps)
+BuildRequires:  procps-ng-devel
 %endif
 BuildRequires:  pkgconfig(libavif)
 BuildRequires:  pkgconfig(libqrencode)
