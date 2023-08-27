@@ -50,6 +50,7 @@ BuildRequires:  libXtst-devel
 BuildRequires:  libxkbfile-devel
 BuildRequires:  lz4-devel
 BuildRequires:  python3-Cython
+BuildRequires:  python3-cups
 BuildRequires:  ack
 BuildRequires:  desktop-file-utils
 BuildRequires:  libvpx-devel
