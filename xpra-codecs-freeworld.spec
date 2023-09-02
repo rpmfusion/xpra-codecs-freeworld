@@ -94,7 +94,6 @@ BuildRequires:  setxkbmap
 %if %{with debug}
 BuildRequires: libasan
 %endif
-
 %if %{with enc_x264}
 BuildRequires:  x264-devel
 %endif
@@ -107,6 +106,11 @@ BuildRequires:  ffmpeg-devel
 BuildRequires:  xvidcore-devel
 %if %{with enc_x265}
 BuildRequires:  x265-devel
+%endif
+# Not distributable
+# See https://fedoraproject.org/wiki/OpenH264
+%if %{with openh264}
+BuildRequires:  openh264-devel
 %endif
 
 Requires:       xpra%{?_isa} = %{version}
