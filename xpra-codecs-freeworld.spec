@@ -37,7 +37,7 @@
 %endif
 
 %if %{with openh264}
-%global _with_openh264 --with-openh264 --with-openh264-decoder --with-openh264-encoder
+%global _with_openh264 --with-openh264 --with-openh264_decoder --with-openh264_encoder
 %endif
 
 Name:           xpra-codecs-freeworld
