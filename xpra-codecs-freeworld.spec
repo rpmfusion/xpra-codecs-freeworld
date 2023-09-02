@@ -65,7 +65,7 @@ BuildRequires:  cups-devel
 BuildRequires:  python3-cups
 BuildRequires:  redhat-rpm-config
 BuildRequires:  python3-rpm-macros
-BuildRequires:  gcc
+BuildRequires:  gcc, gcc-c++
 BuildRequires:  pam-devel
 BuildRequires:  pandoc
 # needs by setup.py to detect systemd `sd_listen_ENABLED = POSIX and pkg_config_ok("--exists", "libsystemd")`
