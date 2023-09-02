@@ -4,6 +4,7 @@
 %if 0%{?__isa_bits} == 64
 %bcond_without dec_avcodec2
 %bcond_without csc_swscale
+%bcond_without openh264
 %else
 %bcond_with dec_avcodec2
 %bcond_with csc_swscale
@@ -35,6 +36,10 @@
 %global _with_csc_swscale --without-csc_swscale
 %endif
 
+%if %{with openh264}
+%global _with_openh264 --with-openh264 --with-openh264-decoder --with-openh264-encoder
+%endif
+
 Name:           xpra-codecs-freeworld
 Version:        5.0.1
 Release:        1%{?dist}
@@ -56,7 +61,8 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  libvpx-devel
 BuildRequires:  libXdamage-devel
 BuildRequires:  libXres-devel
-BuildRequires:  cups-devel, cups
+BuildRequires:  cups-devel
+BuildRequires:  python3-cups
 BuildRequires:  redhat-rpm-config
 BuildRequires:  python3-rpm-macros
 BuildRequires:  gcc
@@ -127,6 +133,7 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
     %{?_with_enc_x265} \
     %{?_with_dec_avcodec2} \
     %{?_with_csc_swscale} \
+    %{?_with_openh264} \
     %{?_with_debug} \
     --with-Xdummy \
     --with-Xdummy_wrapper \
@@ -142,19 +149,19 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 mkdir -p %{buildroot}%{python3_sitearch}/xpra/codecs/
 pushd destdir%{python3_sitearch}/xpra/codecs/
 cp -pr \
-%if %{with csc_swscale}
- csc_swscale \
-%endif
-%if %{with dec_avcodec2}
- dec_avcodec2 \
+%if %{with enc_x265}
+ x265 \
 %endif
 %if %{with enc_x264}
- enc_x264 \
+ x264 \
 %endif
 %if %{with dec_avcodec2} || %{with csc_swscale}
- libav_common \
+ ffmpeg \
 %endif
- enc_ffmpeg enc_x265 %{buildroot}%{python3_sitearch}/xpra/codecs/
+%if %{with openh264}
+ openh264 \
+%endif
+ %{buildroot}%{python3_sitearch}/xpra/codecs/
 popd
 
 #fix shebangs from python3_sitearch
