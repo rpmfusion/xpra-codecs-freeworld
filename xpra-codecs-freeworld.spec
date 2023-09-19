@@ -46,8 +46,8 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        5.0.1
-Release:        2%{?dist}
+Version:        5.0.2
+Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -191,6 +191,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue Sep 19 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.2-1
+- Release 5.0.2
+
 * Sun Sep 17 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.1-2
 - Disable openh264 on EPEL
 
