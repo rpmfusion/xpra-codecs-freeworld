@@ -1,5 +1,5 @@
 %bcond_without enc_x264
-%bcond_without enc_x265
+%bcond_with enc_x265
 # Theses settings requires 64bit
 %if 0%{?__isa_bits} == 64
 %bcond_without dec_avcodec2
@@ -47,7 +47,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        5.0.1
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -149,7 +149,8 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
     --without-strict \
     --with-enc_ffmpeg \
     --without-tests \
-    --without-docs
+    --without-docs \
+    --without-printing --without-cuda_kernels
 
 %install
 # We are interested to additional codecs only
@@ -191,7 +192,8 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
-* Sun Sep 17 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.1-2
+* Fri Sep 22 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.1-2
+- Disable x265 encoder
 - Disable openh264 on EPEL
 
 * Sat Sep 02 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.1-1
