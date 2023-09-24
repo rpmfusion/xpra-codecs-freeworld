@@ -1,9 +1,9 @@
 %bcond_without enc_x264
-%bcond_without enc_x265
+%bcond_with enc_x265
 # Theses settings requires 64bit
 %if 0%{?__isa_bits} == 64
-%bcond_without dec_avcodec2
-%bcond_without csc_swscale
+%bcond_with dec_avcodec2
+%bcond_with csc_swscale
 %if 0%{?fedora}
 %bcond_without openh264
 %else
@@ -47,7 +47,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        5.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -102,10 +102,10 @@ BuildRequires: libasan
 %if %{with enc_x264}
 BuildRequires:  x264-devel
 %endif
-# While ffmpeg-devel should only be needed in theses conditions, setup.py requires it anyway
-#if %%{with dec_avcodec2} || %%{with csc_swscale}
+
+%if %{with dec_avcodec2} || %{with csc_swscale}
 BuildRequires:  ffmpeg-devel
-#endif
+%endif
 
 #BuildRequires:  pygtk2-devel
 BuildRequires:  xvidcore-devel
@@ -144,12 +144,12 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
     %{?_with_csc_swscale} \
     %{?_with_openh264} \
     %{?_with_debug} \
-    --with-Xdummy \
-    --with-Xdummy_wrapper \
+    --with-Xdummy --without-Xdummy_wrapper --without-csc_cython --without-evdi --without-enc_x265 --without-cuda_rebuild \
     --without-strict \
-    --with-enc_ffmpeg \
-    --without-tests \
-    --without-docs
+%if %{without dec_avcodec2} || %{without csc_swscale}
+    --without-ffmpeg \
+%endif
+    --without-printing --without-cuda_kernels --without-tests --without-docs
 
 %install
 # We are interested to additional codecs only
@@ -191,6 +191,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Sep 24 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.2-2
+- FFmpeg codecs disabled (provided by xpra in Fedora)
+
 * Tue Sep 19 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.2-1
 - Release 5.0.2
 
