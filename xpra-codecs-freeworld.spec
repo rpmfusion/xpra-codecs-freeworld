@@ -1,18 +1,11 @@
 %bcond_without enc_x264
 %bcond_with enc_x265
-# Theses settings requires 64bit
-%if 0%{?__isa_bits} == 64
 %bcond_with dec_avcodec2
 %bcond_with csc_swscale
 %if 0%{?fedora}
 %bcond_without openh264
 %else
 %bcond_with openh264
-%endif
-%endif
-%if 0%{?__isa_bits} == 32
-%bcond_with dec_avcodec2
-%bcond_with csc_swscale
 %endif
 
 # For debugging only
@@ -47,7 +40,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        5.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -60,7 +53,6 @@ BuildRequires:  libXtst-devel
 BuildRequires:  libxkbfile-devel
 BuildRequires:  lz4-devel
 BuildRequires:  python3-Cython
-BuildRequires:  python3-cups
 BuildRequires:  ack
 BuildRequires:  desktop-file-utils
 BuildRequires:  libvpx-devel
@@ -70,7 +62,7 @@ BuildRequires:  cups-devel
 BuildRequires:  python3-cups
 BuildRequires:  redhat-rpm-config
 BuildRequires:  python3-rpm-macros
-BuildRequires:  gcc, gcc-c++
+BuildRequires:  gcc-c++
 BuildRequires:  pam-devel
 BuildRequires:  pandoc
 # needs by setup.py to detect systemd `sd_listen_ENABLED = POSIX and pkg_config_ok("--exists", "libsystemd")`
@@ -107,7 +99,6 @@ BuildRequires:  x264-devel
 BuildRequires:  ffmpeg-devel
 %endif
 
-#BuildRequires:  pygtk2-devel
 BuildRequires:  xvidcore-devel
 %if %{with enc_x265}
 BuildRequires:  x265-devel
@@ -134,6 +125,7 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 %endif
 
 %build
+%set_build_flags
 %py3_build -- \
     --without-nvidia --without-pandoc_lua \
     --with-verbose \
@@ -144,12 +136,19 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
     %{?_with_csc_swscale} \
     %{?_with_openh264} \
     %{?_with_debug} \
-    --with-Xdummy --without-Xdummy_wrapper --without-csc_cython --without-evdi --without-enc_x265 --without-cuda_rebuild \
+    --with-Xdummy \
+    --with-Xdummy_wrapper \
     --without-strict \
 %if %{without dec_avcodec2} || %{without csc_swscale}
     --without-ffmpeg \
 %endif
-    --without-printing --without-cuda_kernels --without-tests --without-docs
+    --without-csc_cython \
+    --without-evdi \
+    --without-printing \
+    --without-cuda_kernels \
+    --without-cuda_rebuild \
+    --without-tests \
+    --without-docs
 
 %install
 # We are interested to additional codecs only
@@ -191,6 +190,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Mon Sep 25 2023 Sérgio Basto <sergio@serjux.com> - 5.0.2-3
+- Sync with Fedora
+
 * Sun Sep 24 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.2-2
 - FFmpeg codecs disabled (provided by xpra in Fedora)
 
