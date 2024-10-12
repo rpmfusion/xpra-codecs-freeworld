@@ -28,12 +28,12 @@ Traceback (most recent call last):
     assert r==0, "'%s' returned %s" % (" ".join(cmd), r)
            ^^^^
 AssertionError: 'pandoc --from markdown --to html -o /builddir/build/BUILDROOT/xpra-4.4.4-1.fc38.ppc64le/usr/share/doc/xpra/Build/Debian.html ./docs/Build/Debian.md --lua-filter ./fs/bin/links-to-html.lua' returned -11
---- ./setup.py.orig	2023-03-13 17:59:39.193977373 +0000
-+++ ./setup.py	2023-03-13 17:59:48.477944801 +0000
-@@ -410,7 +410,7 @@ def convert_doc(fsrc, fdst, fmt="html",
+--- ./setup.py.orig	2024-10-11 13:20:23.798168651 +0100
++++ ./setup.py	2024-10-11 13:23:23.220858810 +0100
+@@ -514,7 +514,7 @@ def convert_doc(fsrc, fdst, fmt="html",
          else:
              cmd += ["--lua-filter", "./fs/bin/links-to-html.lua"]
-     r = subprocess.Popen(cmd).wait(30)
+     r = subprocess.Popen(cmd).wait(TIMEOUT)
 -    assert r==0, "'%s' returned %s" % (" ".join(cmd), r)
 +    #assert r==0, "'%s' returned %s" % (" ".join(cmd), r)
  
