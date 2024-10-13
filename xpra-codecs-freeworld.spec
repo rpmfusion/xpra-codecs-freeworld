@@ -39,10 +39,10 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        5.0.6
+Version:        5.0.10
 Release:        1%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
-License:        GPLv2+
+License:        GPL-2.0-or-later
 URL:            https://www.xpra.org/
 Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
 Patch1:         ignore_assert_pandoc.patch
@@ -91,6 +91,7 @@ BuildRequires:  setxkbmap
 %if %{with debug}
 BuildRequires: libasan
 %endif
+
 %if %{with enc_x264}
 BuildRequires:  x264-devel
 %endif
@@ -190,6 +191,15 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sat Oct 12 2024 Sérgio Basto <sergio@serjux.com> - 5.0.10-1
+- Update xpra-codecs-freeworld to 5.0.10
+
+* Fri Aug 02 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
+* Thu Jun 13 2024 Leigh Scott <leigh123linux@gmail.com> - 5.0.6-2
+- Rebuilt for Python 3.13
+
 * Sat Feb 24 2024 Leigh Scott <leigh123linux@gmail.com> - 5.0.6-1
 - Release 5.0.6
 
