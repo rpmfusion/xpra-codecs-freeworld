@@ -40,7 +40,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        5.0.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPL-2.0-or-later
 URL:            https://www.xpra.org/
@@ -127,6 +127,7 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 
 %build
 %set_build_flags
+export CFLAGS="%{optflags} -I%{_includedir}/security"
 %py3_build -- \
     --without-nvidia --without-pandoc_lua \
     --with-verbose \
@@ -191,6 +192,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Fri Jan 31 2025 Antonio Trande <sagitter@fedoraproject.org> - 5.0.10-3
+- Fix GCC15 builds
+
 * Wed Jan 29 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
 
