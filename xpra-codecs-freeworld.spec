@@ -1,121 +1,28 @@
-%bcond_without enc_x264
-%bcond_with enc_x265
-%bcond_with dec_avcodec2
-%bcond_with csc_swscale
-%if 0%{?fedora}
-%bcond_without openh264
-%else
-%bcond_with openh264
-%endif
-
 # For debugging only
 %bcond_with debug
-%if %{with debug}
-%global _with_debug --with-debug
-%endif
-#
 
-# These are necessary as the _with_foo is *not* defined if the
-# --with flag isn't specifed, and we need to have the --without
-# specified option in that case.
-%if %{without enc_x264}
-%global _with_enc_x264 --without-enc_x264
-%endif
-
-%if %{with enc_x265}
-%global _with_enc_x265 --with-enc_x265
-%endif
-
-%if %{without dec_avcodec2}
-%global _with_dec_avcodec2 --without-dec_avcodec2
-%endif
-
-%if %{without csc_swscale}
-%global _with_csc_swscale --without-csc_swscale
-%endif
-
-%if %{with openh264}
-%global _with_openh264 --with-openh264 --with-openh264_decoder --with-openh264_encoder
-%endif
+%global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock
 
 Name:           xpra-codecs-freeworld
-Version:        5.0.10
-Release:        4%{?dist}
-Summary:        Additional codecs for xpra using x264 and ffmpeg
+Version:        5.1.1
+Release:        1%{?dist}
+Summary:        Additional codecs for xpra using x264
 License:        GPL-2.0-or-later
 URL:            https://www.xpra.org/
 Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
-Patch1:         ignore_assert_pandoc.patch
 
-BuildRequires:  python3-devel
-BuildRequires:  gtk3-devel
-BuildRequires:  libXtst-devel
-BuildRequires:  libxkbfile-devel
-BuildRequires:  lz4-devel
-BuildRequires:  python3-Cython
-BuildRequires:  ack
-BuildRequires:  desktop-file-utils
-BuildRequires:  libvpx-devel
-BuildRequires:  libXdamage-devel
-BuildRequires:  libXres-devel
-BuildRequires:  cups-devel
-BuildRequires:  python3-cups
-BuildRequires:  redhat-rpm-config
-BuildRequires:  python3-rpm-macros
-BuildRequires:  gcc-c++
-BuildRequires:  pam-devel
-BuildRequires:  pandoc
-# needs by setup.py to detect systemd `sd_listen_ENABLED = POSIX and pkg_config_ok("--exists", "libsystemd")`
-BuildRequires:  systemd-devel
-%if 0%{?fedora}
-BuildRequires:  procps-ng-devel
-%endif
-BuildRequires:  pkgconfig(libavif)
-BuildRequires:  pkgconfig(libqrencode)
-BuildRequires:  libdrm-devel
-BuildRequires:  pkgconfig(libwebp)
-%if 0%{?el8}
-#BuildRequires:  xorg-x11-server-Xvfb
-#BuildRequires:  cairo-devel
-BuildRequires:  pygobject3-devel
-%else
-BuildRequires:  python3-gobject-devel
-%endif
-BuildRequires:  libappstream-glib
-BuildRequires:  python3-cairo-devel
-BuildRequires:  xorg-x11-server-Xorg
-BuildRequires:  xorg-x11-drv-dummy
-BuildRequires:  xorg-x11-xauth
-BuildRequires:  xkbcomp
-BuildRequires:  setxkbmap
+BuildRequires:  gcc
 %if %{with debug}
-BuildRequires: libasan
+BuildRequires:  libasan
 %endif
-
-%if %{with enc_x264}
+BuildRequires:  python3-devel
+BuildRequires:  python3-Cython
 BuildRequires:  x264-devel
-%endif
-
-%if %{with dec_avcodec2} || %{with csc_swscale}
-BuildRequires:  ffmpeg-devel
-%endif
-
-BuildRequires:  xvidcore-devel
-%if %{with enc_x265}
-BuildRequires:  x265-devel
-%endif
-# Not distributable
-# See https://fedoraproject.org/wiki/OpenH264
-%if %{with openh264}
-BuildRequires:  openh264-devel
-%endif
 
 Requires:       xpra%{?_isa} = %{version}
-Requires:       gstreamer1-plugins-ugly%{?_isa}
 
 %description
-Provides support for H.264 encoding and swscale support in xpra using
-x264 and ffmpeg.
+Provides support for H.264 encoding support in xpra using x264.
 
 %prep
 %autosetup -p1 -n xpra-%{version}
@@ -125,73 +32,29 @@ x264 and ffmpeg.
 sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 %endif
 
+%generate_buildrequires
+%pyproject_buildrequires -x tests %{build_opts}
+
 %build
-%set_build_flags
-export CFLAGS="%{optflags} -I%{_includedir}/security"
-%py3_build -- \
-    --without-nvidia --without-pandoc_lua \
-    --with-verbose \
-    --with-vpx \
-    %{?_with_enc_x264} \
-    %{?_with_enc_x265} \
-    %{?_with_dec_avcodec2} \
-    %{?_with_csc_swscale} \
-    %{?_with_openh264} \
-    %{?_with_debug} \
-    --with-Xdummy \
-    --with-Xdummy_wrapper \
-    --without-strict \
-%if %{without dec_avcodec2} || %{without csc_swscale}
-    --without-ffmpeg \
-%endif
-    --without-csc_cython \
-    --without-evdi \
-    --without-printing \
-    --without-cuda_kernels \
-    --without-cuda_rebuild \
-    --without-tests \
-    --without-docs
+%pyproject_wheel %{build_opts}
 
 %install
-# We are interested to additional codecs only
-# so we install it in a custom dir
-%py3_install -- --root destdir
-mkdir -p %{buildroot}%{python3_sitearch}/xpra/codecs/
-pushd destdir%{python3_sitearch}/xpra/codecs/
-cp -pr \
-%if %{with enc_x265}
- x265 \
-%endif
-%if %{with enc_x264}
- x264 \
-%endif
-%if %{with dec_avcodec2} || %{with csc_swscale}
- ffmpeg \
-%endif
-%if %{with openh264}
- openh264 \
-%endif
- %{buildroot}%{python3_sitearch}/xpra/codecs/
-popd
-
-#fix shebangs from python3_sitearch
-for i in `ack -rl '^#!/.*python' %{buildroot}%{python3_sitearch}/xpra`; do
-    %py3_shebang_fix $i
-    chmod 0755 $i
-done
-
-#fix permissions on shared objects
-find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
-    -exec chmod 0755 {} \;
+# We are interested in x264 codec only
+%pyproject_install
+rm -rv %{buildroot}/usr/etc
+rm -rv %{buildroot}%{python3_sitearch}/xpra-%{version}.dist-info
+rm -rv %{buildroot}%{python3_sitearch}/xpra/{buffers,platform}
 
 %files
-%dir %{python3_sitearch}/xpra
-%dir %{python3_sitearch}/xpra/codecs
-%{python3_sitearch}/xpra/codecs/*
-%doc README.md
 %license COPYING
+%{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Tue Aug 05 2025 Dominik Mierzejewski <dominik@greysector.net> - 5.1.1-1
+- Release 5.1.1
+- Use modern Python packaging macros
+- Minimize build dependencies and build only what we need
+
 * Sun Jul 27 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.10-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
 
