@@ -40,7 +40,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        5.0.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPL-2.0-or-later
 URL:            https://www.xpra.org/
@@ -107,7 +107,7 @@ BuildRequires:  x265-devel
 # Not distributable
 # See https://fedoraproject.org/wiki/OpenH264
 %if %{with openh264}
-BuildRequires:  openh264-devel
+BuildRequires:  noopenh264-devel
 %endif
 
 Requires:       xpra%{?_isa} = %{version}
@@ -192,6 +192,9 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Sun Aug 24 2025 Leigh Scott <leigh123linux@gmail.com> - 5.0.10-5
+- Switch to noopenh264 build requires as the cisco repo is too unreliable to use
+
 * Sun Jul 27 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.10-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
 
