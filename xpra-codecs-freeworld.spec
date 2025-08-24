@@ -46,8 +46,8 @@
 %endif
 
 Name:           xpra-codecs-freeworld
-Version:        5.0.2
-Release:        1%{?dist}
+Version:        5.0.10
+Release:        6%{?dist}
 Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
@@ -115,7 +115,7 @@ BuildRequires:  x265-devel
 # Not distributable
 # See https://fedoraproject.org/wiki/OpenH264
 %if %{with openh264}
-BuildRequires:  openh264-devel
+BuildRequires:  noopenh264-devel
 %endif
 
 Requires:       xpra%{?_isa} = %{version}
@@ -192,6 +192,45 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
+* Tue Aug 04 2026 Antonio Trande <sagitter@fedoraproject.org> - 5.0.10-6
+- Rebuild for ffmpeg-7 in epel9
+
+* Sun Aug 24 2025 Leigh Scott <leigh123linux@gmail.com> - 5.0.10-5
+- Switch to noopenh264 build requires as the cisco repo is too unreliable to use
+
+* Sun Jul 27 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.10-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
+
+* Fri Jan 31 2025 Antonio Trande <sagitter@fedoraproject.org> - 5.0.10-3
+- Fix GCC15 builds
+
+* Wed Jan 29 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
+
+* Sat Oct 12 2024 Sérgio Basto <sergio@serjux.com> - 5.0.10-1
+- Update xpra-codecs-freeworld to 5.0.10
+
+* Fri Aug 02 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
+* Thu Jun 13 2024 Leigh Scott <leigh123linux@gmail.com> - 5.0.6-2
+- Rebuilt for Python 3.13
+
+* Sat Feb 24 2024 Leigh Scott <leigh123linux@gmail.com> - 5.0.6-1
+- Release 5.0.6
+
+* Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 5.0.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Sun Oct 15 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.3-1
+- Release 5.0.3
+
+* Mon Sep 25 2023 Sérgio Basto <sergio@serjux.com> - 5.0.2-3
+- Sync with Fedora
+
+* Sun Sep 24 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.2-2
+- FFmpeg codecs disabled (provided by xpra in Fedora)
+
 * Tue Sep 19 2023 Antonio Trande <sagitter@fedoraproject.org> - 5.0.2-1
 - Release 5.0.2
 
