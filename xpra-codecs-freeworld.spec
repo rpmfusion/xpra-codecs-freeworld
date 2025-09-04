@@ -5,7 +5,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        5.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Additional codecs for xpra using x264
 License:        GPL-2.0-or-later
 URL:            https://www.xpra.org/
@@ -50,6 +50,9 @@ rm -rv %{buildroot}%{python3_sitearch}/xpra/{buffers,platform}
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Thu Sep 04 2025 Sérgio Basto <sergio@serjux.com> - 5.1.1-2
+- Rebuild for x264
+
 * Tue Aug 26 2025 Dominik Mierzejewski <dominik@greysector.net> - 5.1.1-1
 - Release 5.1.1
 - Use modern Python packaging macros
