@@ -4,8 +4,9 @@
 %global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock
 
 Name:           xpra-codecs-freeworld
-Version:        5.1.1
-Release:        2%{?dist}
+Version:        6.3.4
+Release:        1%{?dist}
+Epoch:          1
 Summary:        Additional codecs for xpra using x264
 License:        GPL-2.0-or-later
 URL:            https://www.xpra.org/
@@ -18,8 +19,9 @@ BuildRequires:  libasan
 BuildRequires:  python3-devel
 BuildRequires:  python3-Cython
 BuildRequires:  x264-devel
+BuildRequires:  xxhash-devel
 
-Requires:       xpra%{?_isa} = %{version}
+Requires:       xpra%{?_isa} = 1:%{version}
 
 %description
 Provides support for H.264 encoding support in xpra using x264.
@@ -50,6 +52,10 @@ rm -rv %{buildroot}%{python3_sitearch}/xpra/{buffers,platform}
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Tue Oct 28 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.3.4-1
+- Release 6.3.4
+- Epoch 1
+
 * Thu Sep 04 2025 Sérgio Basto <sergio@serjux.com> - 5.1.1-2
 - Rebuild for x264
 
