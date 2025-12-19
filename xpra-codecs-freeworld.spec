@@ -46,6 +46,8 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 rm -rv %{buildroot}/usr/etc
 rm -rv %{buildroot}%{python3_sitearch}/xpra-%{version}.dist-info
 rm -rv %{buildroot}%{python3_sitearch}/xpra/{buffers,platform}
+rm -rv %{buildroot}%{python3_sitearch}/xpra/cyshared.cpython-*-linux-gnu.so
+rm -rv %{buildroot}%{_libexecdir}
 
 %files
 %license COPYING
