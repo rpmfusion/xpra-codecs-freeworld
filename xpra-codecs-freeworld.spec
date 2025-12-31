@@ -4,7 +4,7 @@
 %global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock
 
 Name:           xpra-codecs-freeworld
-Version:        6.3.6
+Version:        6.4
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
@@ -52,6 +52,9 @@ rm -rv %{buildroot}%{python3_sitearch}/xpra/{buffers,platform}
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Mon Dec 08 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.4-1
+- Release 6.4
+
 * Sun Nov 09 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.3.6-1
 - Release 6.3.6
 
