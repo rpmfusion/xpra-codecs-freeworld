@@ -5,7 +5,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        6.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
 License:        GPL-2.0-or-later
@@ -46,9 +46,9 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 rm -rv %{buildroot}/usr/etc
 rm -rv %{buildroot}%{python3_sitearch}/xpra-%{version}.dist-info
 rm -rv %{buildroot}%{python3_sitearch}/xpra/{buffers,platform}
+rm -rv %{buildroot}%{_libexecdir}
 %if 0%{?fedora} > 42
 rm -rv %{buildroot}%{python3_sitearch}/xpra/cyshared.cpython-*-linux-gnu.so
-rm -rv %{buildroot}%{_libexecdir}
 %endif
 
 %files
@@ -56,6 +56,9 @@ rm -rv %{buildroot}%{_libexecdir}
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-4
+- Always remove libexec directory
+
 * Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-3
 - Remove unused files on Fedora 43+ only
 
