@@ -5,7 +5,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        6.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
 License:        GPL-2.0-or-later
@@ -46,14 +46,19 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 rm -rv %{buildroot}/usr/etc
 rm -rv %{buildroot}%{python3_sitearch}/xpra-%{version}.dist-info
 rm -rv %{buildroot}%{python3_sitearch}/xpra/{buffers,platform}
+%if 0%{?fedora} > 42
 rm -rv %{buildroot}%{python3_sitearch}/xpra/cyshared.cpython-*-linux-gnu.so
 rm -rv %{buildroot}%{_libexecdir}
+%endif
 
 %files
 %license COPYING
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-3
+- Remove unused files on Fedora 43+ only
+
 * Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-2
 - New rebuild
 
