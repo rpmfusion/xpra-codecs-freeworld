@@ -5,7 +5,7 @@
 
 Name:           xpra-codecs-freeworld
 Version:        6.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
 License:        GPL-2.0-or-later
@@ -54,6 +54,9 @@ rm -rv %{buildroot}%{_libexecdir}
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-2
+- New rebuild
+
 * Mon Dec 08 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.4-1
 - Release 6.4
 
