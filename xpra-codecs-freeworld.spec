@@ -4,8 +4,8 @@
 %global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock
 
 Name:           xpra-codecs-freeworld
-Version:        6.4
-Release:        4%{?dist}
+Version:        6.4.1
+Release:        1%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
 License:        GPL-2.0-or-later
@@ -56,6 +56,9 @@ rm -rv %{buildroot}%{python3_sitearch}/xpra/cyshared.cpython-*-linux-gnu.so
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Sat Jan 17 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4.1-1
+- Release 6.4.1
+
 * Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-4
 - Always remove libexec directory
 
