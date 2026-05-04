@@ -35,7 +35,7 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 %endif
 
 %generate_buildrequires
-%pyproject_buildrequires -x tests %{build_opts}
+%pyproject_buildrequires %{build_opts}
 
 %build
 %pyproject_wheel %{build_opts}
