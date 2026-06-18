@@ -1,10 +1,10 @@
 # For debugging only
 %bcond_with debug
 
-%global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock
+%global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock -C--global-option=--without-wayland_client -C--global-option=--without-wayland_server
 
 Name:           xpra-codecs-freeworld
-Version:        6.4.4
+Version:        6.5
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
@@ -56,6 +56,9 @@ rm -rv %{buildroot}%{python3_sitearch}/xpra/cyshared.cpython-*-linux-gnu.so
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
+* Tue Jun 16 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.5-1
+- Release 6.5
+
 * Mon May 04 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4.4-1
 - Release 6.4.4
 
