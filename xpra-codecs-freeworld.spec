@@ -4,7 +4,7 @@
 %global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock -C--global-option=--without-wayland_client -C--global-option=--without-wayland_server
 
 Name:           xpra-codecs-freeworld
-Version:        6.5.2
+Version:        6.5.3
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
@@ -56,46 +56,52 @@ rm -rv %{buildroot}%{python3_sitearch}/xpra/cyshared.cpython-*-linux-gnu.so
 %{python3_sitearch}/xpra/codecs/x264
 
 %changelog
-* Mon Jul 27 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.5.2-1
+* Wed Aug 19 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.5.3-1
+- Release 6.5.3
+
+* Sun Aug 02 2026 RPM Fusion Release Engineering <leigh123linux@rpmfusion.org> - 1:6.5.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+
+* Mon Jul 27 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.5.2-1
 - Release 6.5.2
 
-* Sun Jul 5 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.5.1-1
+* Sun Jul 5 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.5.1-1
 - Release 6.5.1
 
-* Tue Jun 16 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.5-1
+* Tue Jun 16 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.5-1
 - Release 6.5
 
-* Mon May 04 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4.4-1
+* Mon May 04 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4.4-1
 - Release 6.4.4
 
-* Sun Feb 01 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4.3-1
+* Sun Feb 01 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4.3-1
 - Release 6.4.3
 
-* Sat Jan 31 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4.2-1
+* Sat Jan 31 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4.2-1
 - Release 6.4.2
 
-* Sat Jan 17 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4.1-1
+* Sat Jan 17 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4.1-1
 - Release 6.4.1
 
-* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-4
+* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4-4
 - Always remove libexec directory
 
-* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-3
+* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4-3
 - Remove unused files on Fedora 43+ only
 
-* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 6.4-2
+* Sat Jan 03 2026 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4-2
 - New rebuild
 
-* Mon Dec 08 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.4-1
+* Mon Dec 08 2025 Antonio Trande <sagitter@fedoraproject.org> - 1:6.4-1
 - Release 6.4
 
-* Sun Nov 09 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.3.6-1
+* Sun Nov 09 2025 Antonio Trande <sagitter@fedoraproject.org> - 1:6.3.6-1
 - Release 6.3.6
 
-* Wed Nov 05 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.3.5-1
+* Wed Nov 05 2025 Antonio Trande <sagitter@fedoraproject.org> - 1:6.3.5-1
 - Release 6.3.5
 
-* Tue Oct 28 2025 Antonio Trande <sagitter@fedoraproject.org> - 6.3.4-1
+* Tue Oct 28 2025 Antonio Trande <sagitter@fedoraproject.org> - 1:6.3.4-1
 - Release 6.3.4
 - Epoch 1
 
