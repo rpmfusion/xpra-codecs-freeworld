@@ -135,6 +135,7 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 %endif
 
 %build
+export CFLAGS="%{optflags} -fno-strict-aliasing -Wno-deprecated-declarations"
 %py3_build -- \
     --without-nvidia --without-pandoc_lua \
     --with-verbose \
@@ -195,6 +196,7 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %changelog
 * Thu Sep 10 2026 Antonio Trande <sagitter@fedoraproject.org> - 5.0.10-6
 - Rebuild for ffmpeg-7 in epel9
+- Add -fno-strict-aliasing -Wno-deprecated-declarations flags
 
 * Sun Aug 24 2025 Leigh Scott <leigh123linux@gmail.com> - 5.0.10-5
 - Switch to noopenh264 build requires as the cisco repo is too unreliable to use
