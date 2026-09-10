@@ -52,6 +52,7 @@ Summary:        Additional codecs for xpra using x264 and ffmpeg
 License:        GPLv2+
 URL:            https://www.xpra.org/
 Source0:        https://github.com/Xpra-org/xpra/archive/refs/tags/v%{version}/xpra-%{version}.tar.gz
+Patch0:         0001-Add-compatibility-with-FFMPEG-7.0.patch
 Patch1:         ignore_assert_pandoc.patch
 
 BuildRequires:  python3-devel
@@ -127,6 +128,7 @@ x264 and ffmpeg.
 
 %prep
 %autosetup -N -n xpra-%{version}
+%patch -P 0 -p 1 -b .backup
 %patch -P 1 -p 1 -b .backup
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
@@ -135,7 +137,6 @@ sed -i 's|-mfpmath=387|-mfloat-abi=hard|' setup.py
 %endif
 
 %build
-export CFLAGS="%{optflags} -fno-strict-aliasing -Wno-deprecated-declarations"
 %py3_build -- \
     --without-nvidia --without-pandoc_lua \
     --with-verbose \
