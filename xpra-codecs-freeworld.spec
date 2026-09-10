@@ -126,7 +126,8 @@ Provides support for H.264 encoding and swscale support in xpra using
 x264 and ffmpeg.
 
 %prep
-%autosetup -p1 -n xpra-%{version}
+%autosetup -N -n xpra-%{version}
+%patch -P 1 -p 1 -b .backup
 
 # cc1: error: unrecognized compiler option ‘-mfpmath=387’
 %ifarch %{arm}
