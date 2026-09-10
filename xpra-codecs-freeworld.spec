@@ -192,7 +192,7 @@ find %{buildroot}%{python3_sitearch}/xpra -name '*.so' \
 %license COPYING
 
 %changelog
-* Tue Aug 04 2026 Antonio Trande <sagitter@fedoraproject.org> - 5.0.10-6
+* Thu Sep 10 2026 Antonio Trande <sagitter@fedoraproject.org> - 5.0.10-6
 - Rebuild for ffmpeg-7 in epel9
 
 * Sun Aug 24 2025 Leigh Scott <leigh123linux@gmail.com> - 5.0.10-5
