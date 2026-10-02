@@ -4,7 +4,7 @@
 %global build_opts -C--global-option=--minimal -C--global-option=--without-Xdummy -C--global-option=--without-Xdummy_wrapper %{?with_debug:-C--global-option=--with-debug} -C--global-option=--with-enc_x264 -C--global-option=--without-proc -C--global-option=--without-scripts -C--global-option=--without-sd_listen -C--global-option=--without-service -C--global-option=--with-verbose -C--global-option=--without-vsock -C--global-option=--without-wayland_client -C--global-option=--without-wayland_server
 
 Name:           xpra-codecs-freeworld
-Version:        6.5.3
+Version:        6.5.4
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Additional codecs for xpra using x264
